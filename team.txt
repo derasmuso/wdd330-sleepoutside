@@ -1,3 +1,11 @@
+<<<<<<< HEAD
 Trello link: https://trello.com/invite/b/6a982bdea41aa3a3ec98f0e3/ATTI3c6159b3b392d7b5a77d8967535067ee506BD906/sleep-outside-
 
 Name: Monday Ogedengbe
+=======
+Trello Board Link: https://trello.com/b/cTUALYY5/sleep-outside-team-03
+
+Daniel Rasmuson
+
+Brant
+>>>>>>> 301d1cfd77470fe2fab472cb17786332eb8d2e84

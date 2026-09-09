@@ -1,10 +1,17 @@
+<<<<<<< HEAD
 // src/js/ProductData.mjs
 
+=======
+>>>>>>> 301d1cfd77470fe2fab472cb17786332eb8d2e84
 function convertToJson(res) {
   if (res.ok) {
     return res.json();
   } else {
+<<<<<<< HEAD
     throw new Error('Bad Response');
+=======
+    throw new Error("Bad Response");
+>>>>>>> 301d1cfd77470fe2fab472cb17786332eb8d2e84
   }
 }
 
@@ -13,6 +20,7 @@ export default class ProductData {
     this.category = category;
     this.path = `../json/${this.category}.json`;
   }
+<<<<<<< HEAD
 
   async getData() {
     try {
@@ -45,3 +53,15 @@ export default class ProductData {
     }
   }
 }
+=======
+  getData() {
+    return fetch(this.path)
+      .then(convertToJson)
+      .then((data) => data);
+  }
+  async findProductById(id) {
+    const products = await this.getData();
+    return products.find((item) => item.Id === id);
+  }
+}
+>>>>>>> 301d1cfd77470fe2fab472cb17786332eb8d2e84
