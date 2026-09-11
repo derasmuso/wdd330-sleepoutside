@@ -11,6 +11,10 @@ export default class ProductList {
         const list = await this.dataSource.getData();
         this.renderList(list);
     }
+
+    renderList(list) {
+        renderListWithTemplate(productCardTemplate, this.listElement, list);
+    }
 }
 
 function productCardTemplate(product) {
@@ -24,8 +28,4 @@ function productCardTemplate(product) {
       </a>
     </li>
     `;
-}
-
-renderList(list); {
-    renderListWithTemplate(productCardTemplate, this.listElement, list);
 }
