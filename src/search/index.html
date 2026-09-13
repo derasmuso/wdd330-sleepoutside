@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sleep Outside | Search Results</title>
+    <link rel="stylesheet" href="/css/style.css" />
+    <script type="module" src="/js/search.mjs"></script>
+  </head>
+  <body>
+    <header class="divider">
+      <div class="logo">
+        <img src="/images/noun_Tent_2517.svg" alt="tent image for logo" />
+        <a href="/index.html"> Sleep<span class="highlight">Outside</span></a>
+      </div>
+      <form class="search-form" action="/search/" role="search">
+        <label class="visually-hidden" for="product-search"
+          >Search products</label
+        >
+        <input
+          id="product-search"
+          name="q"
+          type="search"
+          placeholder="Search products"
+          autocomplete="off"
+        />
+        <button type="submit">Search</button>
+      </form>
+      <div class="cart">
+        <a href="/cart/index.html" aria-label="View cart">Cart</a>
+      </div>
+    </header>
+    <main class="divider">
+      <section class="products">
+        <h1>Search Results</h1>
+        <p class="search-results__message" role="status"></p>
+        <ul class="product-list"></ul>
+      </section>
+    </main>
+    <footer>&copy;NOT a real business</footer>
+  </body>
+</html>
