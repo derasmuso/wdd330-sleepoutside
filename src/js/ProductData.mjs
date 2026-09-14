@@ -20,4 +20,21 @@ export default class ProductData {
     const products = await this.getData();
     return products.find((item) => item.Id === id);
   }
+
+  async search(searchTerm) {
+    const products = await this.getData();
+    const normalizedTerm = searchTerm.trim().toLowerCase();
+
+    return products.filter((product) => {
+      const searchableProduct = [
+        product.Name,
+        product.NameWithoutBrand,
+        product.Brand.Name,
+      ]
+        .join(" ")
+        .toLowerCase();
+
+      return searchableProduct.includes(normalizedTerm);
+    });
+  }
 }
