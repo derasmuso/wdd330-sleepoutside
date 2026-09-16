@@ -60,6 +60,40 @@ p {
   color: var(--font-body);
 }
 
+.search-form {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  margin: 0.5rem;
+}
+
+.search-form input {
+  min-width: 0;
+  padding: 0.5rem;
+}
+
+.search-form button {
+  margin: 0;
+  padding: 0.5rem 0.75rem;
+  font-size: var(--small-font);
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.search-results__message {
+  padding: 0 1rem;
+}
+
 .hero {
   position: relative;
 }
