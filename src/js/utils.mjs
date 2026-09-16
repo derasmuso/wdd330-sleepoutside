@@ -29,3 +29,57 @@ export function convertToCurrency(amount) {
 export function generateId() {
   return Date.now().toString(36) + Math.random().toString(36).substr(2);
 }
+
+
+// Render a single template into a parent element
+export function renderWithTemplate(template, parentElement, data, callback) {
+  parentElement.innerHTML = template;
+  if (callback) {
+    callback(data);
+  }
+}
+
+// Load a template from a file path
+export async function loadTemplate(path) {
+  try {
+    const res = await fetch(path);
+    if (!res.ok) {
+      throw new Error(`Failed to load template: ${res.status}`);
+    }
+    const template = await res.text();
+    return template;
+  } catch (error) {
+    console.error('Error loading template:', error);
+    return '';
+  }
+}
+
+// Load both header and footer
+export async function loadHeaderFooter() {
+  try {
+    // Load header
+    const headerTemplate = await loadTemplate('/partials/header.html');
+    const headerElement = document.querySelector('#main-header');
+    if (headerElement) {
+      renderWithTemplate(headerTemplate, headerElement);
+    }
+
+    // Load footer
+    const footerTemplate = await loadTemplate('/partials/footer.html');
+    const footerElement = document.querySelector('#main-footer');
+    if (footerElement) {
+      renderWithTemplate(footerTemplate, footerElement);
+    }
+  } catch (error) {
+    console.error('Error loading header/footer:', error);
+  }
+}
+
+// Existing renderListWithTemplate function
+export function renderListWithTemplate(templateFn, parentElement, list, position = "afterbegin", clear = false) {
+  if (clear) {
+    parentElement.innerHTML = '';
+  }
+  const htmlStrings = list.map(templateFn);
+  parentElement.insertAdjacentHTML(position, htmlStrings.join(''));
+}
