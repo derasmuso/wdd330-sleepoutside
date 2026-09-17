@@ -211,6 +211,17 @@ button {
   max-width: 250px;
 }
 
+.category-card {
+  flex: 1 1 150px;
+  max-width: 150px;
+  text-align: center;
+}
+
+.category-card img {
+  width: 80px;
+  height: 80px;
+}
+
 .product-card h2,
 .product-card h3,
 .product-card p {
