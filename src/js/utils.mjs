@@ -1,49 +1,37 @@
-// wrapper for querySelector...returns matching element
-export function qs(selector, parent = document) {
-  return parent.querySelector(selector);
-}
-// or a more concise version if you are into that sort of thing:
-// export const qs = (selector, parent = document) => parent.querySelector(selector);
+// src/js/utils.mjs
 
-// retrieve data from localstorage
-export function getLocalStorage(key) {
-  return JSON.parse(localStorage.getItem(key));
-}
-// save data to local storage
-export function setLocalStorage(key, data) {
-  localStorage.setItem(key, JSON.stringify(data));
-}
-// set a listener for both touchend and click
-export function setClick(selector, callback) {
-  qs(selector).addEventListener("touchend", (event) => {
-    event.preventDefault();
-    callback();
-  });
-  qs(selector).addEventListener("click", callback);
-}
-
+// Get a parameter from the URL query string
 export function getParam(param) {
   const queryString = window.location.search;
   const urlParams = new URLSearchParams(queryString);
-  const product = urlParams.get(param);
-
-  return product;
+  return urlParams.get(param);
 }
 
-export function renderListWithTemplate(
-  template,
-  parentElement,
-  list,
-  position = "afterbegin",
-  clear = false,
-) {
-  const htmlStrings = list.map(template);
-  if (clear) {
-    parentElement.innerHTML = "";
-  }
-  parentElement.insertAdjacentHTML(position, htmlStrings.join(""));
+// Set data in localStorage
+export function setLocalStorage(key, data) {
+  localStorage.setItem(key, JSON.stringify(data));
 }
 
+// Get data from localStorage
+export function getLocalStorage(key) {
+  return JSON.parse(localStorage.getItem(key));
+}
+
+// Convert a number to currency format
+export function convertToCurrency(amount) {
+  return new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD'
+  }).format(amount);
+}
+
+// Generate a random ID
+export function generateId() {
+  return Date.now().toString(36) + Math.random().toString(36).substr(2);
+}
+
+
+// Render a single template into a parent element
 export function renderWithTemplate(template, parentElement, data, callback) {
   parentElement.innerHTML = template;
   if (callback) {
@@ -51,19 +39,47 @@ export function renderWithTemplate(template, parentElement, data, callback) {
   }
 }
 
+// Load a template from a file path
 export async function loadTemplate(path) {
-  const res = await fetch(path);
-  const template = await res.text();
-  return template;
+  try {
+    const res = await fetch(path);
+    if (!res.ok) {
+      throw new Error(`Failed to load template: ${res.status}`);
+    }
+    const template = await res.text();
+    return template;
+  } catch (error) {
+    console.error('Error loading template:', error);
+    return '';
+  }
 }
 
+// Load both header and footer
 export async function loadHeaderFooter() {
-  const headerTemplate = await loadTemplate("../partials/header.html");
-  const footerTemplate = await loadTemplate("../partials/footer.html");
+  try {
+    // Load header
+    const headerTemplate = await loadTemplate('/partials/header.html');
+    const headerElement = document.querySelector('#main-header');
+    if (headerElement) {
+      renderWithTemplate(headerTemplate, headerElement);
+    }
 
-  const headerElement = document.querySelector("#main-header");
-  const footerElement = document.querySelector("#main-footer");
+    // Load footer
+    const footerTemplate = await loadTemplate('/partials/footer.html');
+    const footerElement = document.querySelector('#main-footer');
+    if (footerElement) {
+      renderWithTemplate(footerTemplate, footerElement);
+    }
+  } catch (error) {
+    console.error('Error loading header/footer:', error);
+  }
+}
 
-  renderWithTemplate(headerTemplate, headerElement);
-  renderWithTemplate(footerTemplate, footerElement);
+// Existing renderListWithTemplate function
+export function renderListWithTemplate(templateFn, parentElement, list, position = "afterbegin", clear = false) {
+  if (clear) {
+    parentElement.innerHTML = '';
+  }
+  const htmlStrings = list.map(templateFn);
+  parentElement.insertAdjacentHTML(position, htmlStrings.join(''));
 }
