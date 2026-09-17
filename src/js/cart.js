@@ -101,11 +101,15 @@ function cartItemTemplate(item) {
           <h2 class="card__name">${item.Name || "Unknown Product"}</h2>
         </a>
         <p class="cart-card__color">${colorName}</p>
-        <p class="cart-card__quantity">Qty: ${quantity}</p>
+        <div class="cart-item-quantity">
+          <button class="qty-btn qty-minus" data-id="${item.Id}">−</button>
+          <span class="qty-display">${quantity}</span>
+          <button class="qty-btn qty-plus" data-id="${item.Id}">+</button>
+        </div>
         <p class="cart-card__price">$${price.toFixed(2)}</p>
         <p class="cart-item-subtotal">Subtotal: $${subtotal.toFixed(2)}</p>
       </div>
-      <button class="remove-item" data-id="${item.Id || ""}">
+      <button class="remove-item" data-id="${item.Id}">
         ✕ Remove
       </button>
     </li>
@@ -123,18 +127,57 @@ function removeFromCart(productId) {
   renderCartContents();
 }
 
-// Setup remove buttons
+// Update quantity
+function updateQuantity(productId, change) {
+  if (!productId) return;
+
+  let cart = getLocalStorage("so-cart") || [];
+  const item = cart.find((i) => i.Id === productId);
+
+  if (!item) return;
+
+  item.quantity = (item.quantity || 1) + change;
+
+  // Remove if quantity drops to 0
+  if (item.quantity <= 0) {
+    cart = cart.filter((i) => i.Id !== productId);
+  }
+
+  setLocalStorage("so-cart", cart);
+  renderCartContents();
+}
+
 function setupRemoveButtons() {
   const cartContainer = document.querySelector(".product-list");
   if (!cartContainer) return;
 
-  cartContainer.addEventListener("click", function (e) {
+  // Remove existing listeners first to avoid duplicates
+  const newContainer = cartContainer.cloneNode(true);
+  cartContainer.parentNode.replaceChild(newContainer, cartContainer);
+
+  newContainer.addEventListener("click", function (e) {
+    // Handle remove
     const removeBtn = e.target.closest(".remove-item");
     if (removeBtn) {
       const productId = removeBtn.dataset.id;
-      if (productId) {
-        removeFromCart(productId);
-      }
+      if (productId) removeFromCart(productId);
+      return;
+    }
+
+    // Handle quantity minus
+    const minusBtn = e.target.closest(".qty-minus");
+    if (minusBtn) {
+      const productId = minusBtn.dataset.id;
+      if (productId) updateQuantity(productId, -1);
+      return;
+    }
+
+    // Handle quantity plus
+    const plusBtn = e.target.closest(".qty-plus");
+    if (plusBtn) {
+      const productId = plusBtn.dataset.id;
+      if (productId) updateQuantity(productId, 1);
+      return;
     }
   });
 }

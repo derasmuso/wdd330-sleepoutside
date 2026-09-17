@@ -622,6 +622,54 @@ button {
   color: #2c7a4d;
 }
 
+/* Cart Quantity Controls */
+.cart-item-quantity {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 8px 0;
+}
+
+.qty-btn {
+  width: 30px;
+  height: 30px;
+  border: 1px solid #ddd;
+  background: white;
+  border-radius: 5px;
+  font-size: 1.2rem;
+  cursor: pointer;
+  color: #2c7a4d;
+  font-weight: bold;
+  transition: background 0.2s, color 0.2s;
+}
+
+.qty-btn:hover {
+  background: #2c7a4d;
+  color: white;
+}
+
+.qty-display {
+  min-width: 30px;
+  text-align: center;
+  font-weight: bold;
+  font-size: 1.1rem;
+}
+
+.remove-item {
+  background: #dc3545;
+  color: white;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: background 0.2s;
+}
+
+.remove-item:hover {
+  background: #b02a37;
+}
+
 @media (max-width: 600px) {
   .checkout {
     padding: 10px;
