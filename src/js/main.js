@@ -1,15 +1,27 @@
 import ProductData from "./ProductData.mjs";
-import ProductList from "./ProductList.mjs";
-import { initSearchForm } from "./search-form.mjs";
 import { loadHeaderFooter } from "./utils.mjs";
 
 loadHeaderFooter();
 
-const dataSource = new ProductData("tents");
+const productListElement = document.querySelector(".product-list");
 
-const element = document.querySelector(".product-list");
-
-const productList = new ProductList("Tents", dataSource, element);
-productList.init();
-
-initSearchForm(document.querySelector(".search-form"));
+if (productListElement) {
+  const dataSource = new ProductData("tents");
+  dataSource.getData().then((products) => {
+    const html = products
+      .map(
+        (product) => `
+      <li class="product-card">
+        <a href="/product_pages/?product=${product.Id}">
+          <img src="${product.Image}" alt="${product.Name}" loading="lazy">
+          <h3 class="card__brand">${product.Brand?.Name || product.Brand || ""}</h3>
+          <h2 class="card__name">${product.Name}</h2>
+          <p class="product-card__price">$${Number(product.FinalPrice || product.Price).toFixed(2)}</p>
+        </a>
+      </li>
+    `,
+      )
+      .join("");
+    productListElement.innerHTML = html;
+  });
+}
