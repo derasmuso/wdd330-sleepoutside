@@ -124,7 +124,7 @@ p {
   margin-top: -1.3em;
 }
 
-.logo--square > div {
+.logo--square>div {
   margin-top: -1.7em;
 }
 
@@ -209,6 +209,17 @@ button {
   padding: 0.5em;
   border: 1px solid var(--light-grey);
   max-width: 250px;
+}
+
+.category-card {
+  flex: 1 1 150px;
+  max-width: 150px;
+  text-align: center;
+}
+
+.category-card img {
+  width: 80px;
+  height: 80px;
 }
 
 .product-card h2,
