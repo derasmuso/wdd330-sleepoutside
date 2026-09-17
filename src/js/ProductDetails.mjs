@@ -26,9 +26,19 @@ export default class ProductDetails {
     // If there is no cart yet, create an empty array.
     const cartItems = getLocalStorage("so-cart") || [];
 
-    // Add the current product to the cart array.
-    // Using an array allows multiple products to be stored.
-    cartItems.push(this.product);
+    // Check if the product is already in the cart.
+    const itemAlreadyInCart = cartItems.find(
+      (item) => item.Id === this.product.Id
+    );
+    // if the product is already in the cart, increase the quantity by 1.
+    if (itemAlreadyInCart) {
+      itemAlreadyInCart.Quantity += 1;
+    } else {
+      this.product.Quantity = 1;
+      // Add the current product to the cart array.
+      // Using an array allows multiple products to be stored.
+      cartItems.push(this.product);
+    }
 
     // Save the updated cart array back to localStorage.
     setLocalStorage("so-cart", cartItems);

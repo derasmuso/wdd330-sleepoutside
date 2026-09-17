@@ -34,7 +34,7 @@ function cartItemTemplate(item) {
       </p>
 
       <p class="cart-card__quantity">
-        qty: 1
+        qty: ${item.Quantity}
       </p>
 
       <p class="cart-card__price">
