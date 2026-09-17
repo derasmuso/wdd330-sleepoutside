@@ -12,10 +12,10 @@ const myList = new ProductList(category, dataSource, listElement);
 myList.init();
 
 const categoryNames = {
-    tents: "Tents",
-    hammocks: "Hammocks",
-    backpacks: "Backpacks",
-    "sleeping-bags": "Sleeping Bags",
+  tents: "Tents",
+  hammocks: "Hammocks",
+  backpacks: "Backpacks",
+  "sleeping-bags": "Sleeping Bags",
 };
 
 const categoryTitleElement = document.querySelector(".title.highlight");
