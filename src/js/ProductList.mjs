@@ -5,11 +5,18 @@ export default class ProductList {
     this.category = category;
     this.dataSource = dataSource;
     this.listElement = listElement;
+    this.products = []; // Array to store fetched products for filtering or sorting
   }
 
   async init() {
-    const list = await this.dataSource.getData();
-    this.renderList(list);
+    // 1. Fetch products and assign them to this.products
+    this.products = await this.dataSource.getData();
+
+    // 2. Render the initial list
+    this.renderList(this.products);
+
+    // 3. Initialize the sorting functionality
+    this.initSorting();
   }
 
   renderList(list) {
@@ -20,6 +27,32 @@ export default class ProductList {
       "afterbegin",
       true,
     );
+  }
+
+  initSorting() {
+    const sortSelect = document.querySelector("#sort-select");
+    if (!sortSelect) return; // Exit if the sorting element is not present on this page
+
+    sortSelect.addEventListener("change", (event) => {
+      const sortValue = event.target.value;
+
+      // Create a shallow copy of the products array to avoid mutating the original data
+      let sortedProducts = [...this.products];
+
+      // Sort products based on the selected criteria
+      if (sortValue === "name-asc") {
+        sortedProducts.sort((a, b) => a.Name.localeCompare(b.Name));
+      } else if (sortValue === "name-desc") {
+        sortedProducts.sort((a, b) => b.Name.localeCompare(a.Name));
+      } else if (sortValue === "price-asc") {
+        sortedProducts.sort((a, b) => a.FinalPrice - b.FinalPrice);
+      } else if (sortValue === "price-desc") {
+        sortedProducts.sort((a, b) => b.FinalPrice - a.FinalPrice);
+      }
+
+      // Re-render the UI list with the newly sorted items
+      this.renderList(sortedProducts);
+    });
   }
 }
 
