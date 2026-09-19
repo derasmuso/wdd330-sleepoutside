@@ -29,6 +29,9 @@ async function searchProducts(term) {
   try {
     const products = await dataSource.search(term);
     productList.renderList(products);
+    productList.renderBreadcrumb(products.length);
+    productList.products = products;
+    productList.initSorting();
     resultMessage.textContent = products.length
       ? `${products.length} result${products.length === 1 ? "" : "s"} for “${term}”.`
       : `No products found for “${term}”.`;

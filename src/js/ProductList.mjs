@@ -1,70 +1,350 @@
 import { renderListWithTemplate } from "./utils.mjs";
 
 export default class ProductList {
-  constructor(category, dataSource, listElement) {
+  constructor(
+    category,
+    dataSource,
+    listElement
+  ) {
     this.category = category;
     this.dataSource = dataSource;
     this.listElement = listElement;
-    this.products = []; // Array to store fetched products for filtering or sorting
+    this.products = [];
   }
 
   async init() {
-    // 1. Fetch products and assign them to this.products
-    this.products = await this.dataSource.getData();
+    try {
+      const products =
+        await this.dataSource.getData();
 
-    // 2. Render the initial list
-    this.renderList(this.products);
+      this.renderList(products);
 
-    // 3. Initialize the sorting functionality
-    this.initSorting();
+      this.updateProductCount(
+        products.length
+      );
+
+      this.renderBreadcrumb(
+        products.length
+      );
+
+      this.initSorting();
+
+    } catch (error) {
+      console.error(
+        "Unable to load products:",
+        error
+      );
+
+      this.renderList([]);
+      this.updateProductCount(0);
+      this.renderBreadcrumb(0);
+    }
   }
 
   renderList(list) {
+    this.products = Array.isArray(list)
+      ? list
+      : [];
+
+    if (!this.listElement) {
+      console.error(
+        "Product list element was not found."
+      );
+
+      return;
+    }
+
     renderListWithTemplate(
       productCardTemplate,
       this.listElement,
-      list,
+      this.products,
       "afterbegin",
-      true,
+      true
+    );
+  }
+
+  updateProductCount(count) {
+    const countElement =
+      document.querySelector(
+        "#product-count"
+      );
+
+    if (!countElement) {
+      return;
+    }
+
+    countElement.textContent =
+      `${count} ${
+        count === 1
+          ? "item"
+          : "items"
+      }`;
+  }
+
+  /*
+   * Product list breadcrumb:
+   *
+   * Tents -> (24 items)
+   */
+  renderBreadcrumb(count) {
+    const breadcrumb =
+      document.querySelector(
+        "#breadcrumb"
+      );
+
+    if (!breadcrumb) {
+      return;
+    }
+
+    breadcrumb.innerHTML = `
+      <span>
+        ${escapeHtml(this.category)}
+      </span>
+
+      <span aria-hidden="true">
+        -&gt;
+      </span>
+
+      <span>
+        (${count}
+        ${count === 1 ? "item" : "items"})
+      </span>
+    `;
+
+    breadcrumb.setAttribute(
+      "aria-label",
+      `${this.category}, ${count} ${
+        count === 1
+          ? "item"
+          : "items"
+      }`
     );
   }
 
   initSorting() {
-    const sortSelect = document.querySelector("#sort-select");
-    if (!sortSelect) return; // Exit if the sorting element is not present on this page
+    const sortSelect =
+      document.querySelector(
+        "#sort-select"
+      );
 
-    sortSelect.addEventListener("change", (event) => {
-      const sortValue = event.target.value;
+    if (!sortSelect) {
+      return;
+    }
 
-      // Create a shallow copy of the products array to avoid mutating the original data
-      let sortedProducts = [...this.products];
+    sortSelect.addEventListener(
+      "change",
+      (event) => {
+        const sortValue =
+          event.target.value;
 
-      // Sort products based on the selected criteria
-      if (sortValue === "name-asc") {
-        sortedProducts.sort((a, b) => a.Name.localeCompare(b.Name));
-      } else if (sortValue === "name-desc") {
-        sortedProducts.sort((a, b) => b.Name.localeCompare(a.Name));
-      } else if (sortValue === "price-asc") {
-        sortedProducts.sort((a, b) => a.FinalPrice - b.FinalPrice);
-      } else if (sortValue === "price-desc") {
-        sortedProducts.sort((a, b) => b.FinalPrice - a.FinalPrice);
+        const sortedProducts =
+          [...this.products];
+
+        switch (sortValue) {
+          case "name-asc":
+            sortedProducts.sort(
+              (a, b) =>
+                getProductName(a)
+                  .localeCompare(
+                    getProductName(b)
+                  )
+            );
+            break;
+
+          case "name-desc":
+            sortedProducts.sort(
+              (a, b) =>
+                getProductName(b)
+                  .localeCompare(
+                    getProductName(a)
+                  )
+            );
+            break;
+
+          case "price-asc":
+            sortedProducts.sort(
+              (a, b) =>
+                Number(
+                  a.FinalPrice || 0
+                ) -
+                Number(
+                  b.FinalPrice || 0
+                )
+            );
+            break;
+
+          case "price-desc":
+            sortedProducts.sort(
+              (a, b) =>
+                Number(
+                  b.FinalPrice || 0
+                ) -
+                Number(
+                  a.FinalPrice || 0
+                )
+            );
+            break;
+
+          default:
+            break;
+        }
+
+        this.renderList(
+          sortedProducts
+        );
       }
-
-      // Re-render the UI list with the newly sorted items
-      this.renderList(sortedProducts);
-    });
+    );
   }
 }
 
+/*
+ * Product card
+ */
 function productCardTemplate(product) {
+  const discount =
+    calculateDiscount(product);
+
+  const productName =
+    product.NameWithoutBrand ||
+    product.Name ||
+    "Product";
+
+  const brandName =
+    product.Brand?.Name || "";
+
+  const productImage =
+    product.Image || "";
+
+  const productUrl =
+    `/product_pages/?product=${encodeURIComponent(
+      product.Id
+    )}`;
+
   return `
     <li class="product-card">
-      <a href="/product_pages/?product=${product.Id}">
-        <img src="${product.Image}" alt="${product.Name}">
-        <h3 class="card__brand">${product.Brand.Name}</h3>
-        <h2 class="card__name">${product.NameWithoutBrand}</h2>
-        <p class="product-card__price">$${product.FinalPrice}</p>
+
+      <a href="${productUrl}">
+
+        <div class="product-card__image-wrapper">
+
+          ${
+            discount
+              ? `
+                <span
+                  class="discount-badge"
+                  aria-label="${discount.percentage}% discount"
+                >
+                  ${discount.percentage}% OFF
+                </span>
+              `
+              : ""
+          }
+
+          <picture>
+            <img
+              src="${escapeHtml(productImage)}"
+              alt="${escapeHtml(productName)}"
+              loading="lazy"
+              width="320"
+              height="320"
+            />
+          </picture>
+
+        </div>
+
+        <h3 class="card__brand">
+          ${escapeHtml(brandName)}
+        </h3>
+
+        <h2 class="card__name">
+          ${escapeHtml(productName)}
+        </h2>
+
+        <p class="product-card__price">
+          $${formatPrice(product.FinalPrice)}
+        </p>
+
       </a>
+
     </li>
-    `;
+  `;
+}
+
+function getProductName(product) {
+  return (
+    product?.NameWithoutBrand ||
+    product?.Name ||
+    ""
+  ).toLowerCase();
+}
+
+function calculateDiscount(product) {
+  const retailPrice =
+    Number(
+      product?.SuggestedRetailPrice
+    );
+
+  const finalPrice =
+    Number(
+      product?.FinalPrice
+    );
+
+  if (
+    !Number.isFinite(retailPrice) ||
+    !Number.isFinite(finalPrice)
+  ) {
+    return null;
+  }
+
+  if (
+    retailPrice <= 0 ||
+    finalPrice <= 0 ||
+    finalPrice >= retailPrice
+  ) {
+    return null;
+  }
+
+  const percentage =
+    Math.round(
+      ((retailPrice - finalPrice) /
+        retailPrice) *
+        100
+    );
+
+  if (percentage <= 0) {
+    return null;
+  }
+
+  return {
+    percentage
+  };
+}
+
+function formatPrice(price) {
+  const numericPrice =
+    Number(price);
+
+  if (
+    !Number.isFinite(
+      numericPrice
+    )
+  ) {
+    return "0.00";
+  }
+
+  return numericPrice.toFixed(2);
+}
+
+function escapeHtml(value = "") {
+  return String(value).replace(
+    /[&<>"']/g,
+    (character) =>
+      ({
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#039;"
+      })[character]
+  );
 }
