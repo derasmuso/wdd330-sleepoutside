@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Sleep Outside | Home</title>
     <link rel="stylesheet" href="/css/style.css" />
-    <script src="js/main.js" type="module"></script>
+    <script src="/js/main.js" type="module"></script>
   </head>
 
   <body>
@@ -29,20 +29,52 @@
         </div>
       </div>
 
-      <section class="products">
-        <h2>Top Products titos</h2>
-        <!-- Sorting Container Added Here -->
-        <div class="sorting-container">
-          <label for="sort-select">Sort by:</label>
-          <select id="sort-select">
-            <option value="">Select...</option>
-            <option value="name-asc">Name (A - Z)</option>
-            <option value="name-desc">Name (Z - A)</option>
-            <option value="price-asc">Price (Low to High)</option>
-            <option value="price-desc">Price (High to Low)</option>
-          </select>
+      <section class="categories-section">
+        <h2>Categories</h2>
+
+        <div class="categories-container">
+          <!-- Category 1 -->
+          <a href="/product_listing/index.html?category=tents">
+            <div class="category-card">
+              <img
+                src="public/images/categories/category-tents.svg"
+                alt="Tents"
+              />
+              <h3>Tents</h3>
+            </div>
+          </a>
+          <!-- Category 2 -->
+          <a href="/product_listing/index.html?category=backpacks">
+            <div class="category-card">
+              <img
+                src="public/images/categories/category-backpacks.svg"
+                alt="Backpacks"
+              />
+              <h3>Backpacks</h3>
+            </div>
+          </a>
+          <!-- Category 3 -->
+          <a href="/product_listing/index.html?category=sleeping-bags">
+            <div class="category-card">
+              <img
+                src="public/images/categories/category-sleepingbags.svg"
+                alt="Sleeping Bags"
+              />
+              <h3>Sleeping Bags</h3>
+            </div>
+          </a>
+          <!-- Category 4 -->
+
+          <a href="/product_listing/index.html?category=hammocks">
+            <div class="category-card">
+              <img
+                src="public/images/categories/category-hammocks.svg"
+                alt="Hammocks"
+              />
+              <h3>Hammocks</h3>
+            </div>
+          </a>
         </div>
-        <ul class="product-list"></ul>
       </section>
     </main>
     <footer id="main-footer"></footer>

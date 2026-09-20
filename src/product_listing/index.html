@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Product Listing</title>
+    <link rel="stylesheet" href="/css/style.css" />
+    <script src="/js/product-listing.js" type="module"></script>
+  </head>
+
+  <body>
+    <header class="divider" id="main-header"></header>
+    <main class="divider">
+      <section class="products">
+        <div class="products-header">
+          <h2>Top Products: <span class="title highlight"></span></h2>
+
+          <!-- Sorting Container Added Here -->
+          <div class="sort-container">
+            <label for="sort-select">Sort by:</label>
+            <select id="sort-select">
+              <option value="" disabled selected>Select...</option>
+              <option value="name-asc">Name (A-Z)</option>
+              <option value="name-desc">Name (Z-A)</option>
+              <option value="price-asc">Price (Low to High)</option>
+              <option value="price-desc">Price (High to Low)</option>
+            </select>
+          </div>
+        </div>
+        <ul class="product-list"></ul>
+      </section>
+    </main>
+    <footer id="main-footer"></footer>
+  </body>
+</html>

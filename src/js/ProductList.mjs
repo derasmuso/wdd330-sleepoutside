@@ -10,13 +10,16 @@ export default class ProductList {
 
   async init() {
     // 1. Fetch products and assign them to this.products
-    this.products = await this.dataSource.getData();
+    this.list = await this.dataSource.getData(this.category);
 
     // 2. Render the initial list
-    this.renderList(this.products);
+    this.renderList(this.list);
 
     // 3. Initialize the sorting functionality
     this.initSorting();
+
+    // 4. title
+    document.querySelector(".title").textContent = this.category;
   }
 
   renderList(list) {
@@ -37,7 +40,7 @@ export default class ProductList {
       const sortValue = event.target.value;
 
       // Create a shallow copy of the products array to avoid mutating the original data
-      let sortedProducts = [...this.products];
+      let sortedProducts = [...this.list];
 
       // Sort products based on the selected criteria
       if (sortValue === "name-asc") {
@@ -60,7 +63,7 @@ function productCardTemplate(product) {
   return `
     <li class="product-card">
       <a href="/product_pages/?product=${product.Id}">
-        <img src="${product.Image}" alt="${product.Name}">
+        <img src="${product.Images.PrimaryMedium}" alt="${product.Name}">
         <h3 class="card__brand">${product.Brand.Name}</h3>
         <h2 class="card__name">${product.NameWithoutBrand}</h2>
         <p class="product-card__price">$${product.FinalPrice}</p>
