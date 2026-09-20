@@ -1,4 +1,8 @@
-import { getLocalStorage, loadHeaderFooter } from "./utils.mjs";
+import {
+  getLocalStorage,
+  loadHeaderFooter,
+  setLocalStorage,
+} from "./utils.mjs";
 
 function renderCartContents() {
   const cartItems = getLocalStorage("so-cart");
@@ -39,14 +43,46 @@ function cartItemTemplate(item) {
          qty: ${item.Quantity}
       </p>
 
-      <!-- Direct child 5: Product price -->
-      <p class="cart-card__price">
-        $${item.FinalPrice}
-      </p>
+      <!-- Direct child 5: Container holding both price and remove button side by side -->
+      <div class="cart-card__price-action">
+        <span class="cart-card__price">$${item.FinalPrice}</span>
+        <span class="cart-card__remove" data-id="${item.Id}" title="Remove item">❌</span>
+      </div>
     </li>
   `;
 
   return newItem;
 }
+
+// Initialize event listener to handle item removal when clicking the "X"
+function initCartRemoval() {
+  const cartListElement = document.querySelector(".product-list");
+
+  if (!cartListElement) return;
+
+  cartListElement.addEventListener("click", (event) => {
+    // Check if the clicked element is the remove trigger
+    if (event.target.classList.contains("cart-card__remove")) {
+      const productId = event.target.dataset.id;
+      removeProductFromCart(productId);
+    }
+  });
+}
+
+// Filter out the selected product from LocalStorage and update the view
+function removeProductFromCart(id) {
+  let cartItems = getLocalStorage("so-cart") || [];
+
+  // Filter out the item matching the product ID
+  cartItems = cartItems.filter((item) => item.Id !== id);
+
+  // Save updated array back to LocalStorage
+  setLocalStorage("so-cart", cartItems);
+
+  // Re-render the cart list on the UI
+  renderCartContents();
+}
+
 renderCartContents();
 loadHeaderFooter();
+initCartRemoval();

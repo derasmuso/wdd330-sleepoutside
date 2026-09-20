@@ -37,6 +37,15 @@ export function renderListWithTemplate(
   position = "afterbegin",
   clear = false,
 ) {
+  // Make sure list is a valid array before calling map to prevent runtime errors
+  if (!Array.isArray(list)) {
+    console.error(
+      "The data provided to renderListWithTemplate is not a valid array:",
+      list,
+    );
+    return; // Exit early safely if data is missing or invalid
+  }
+
   const htmlStrings = list.map(template);
   if (clear) {
     parentElement.innerHTML = "";

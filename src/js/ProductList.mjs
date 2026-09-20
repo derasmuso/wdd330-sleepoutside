@@ -9,17 +9,23 @@ export default class ProductList {
   }
 
   async init() {
-    // 1. Fetch products and assign them to this.products
-    this.list = await this.dataSource.getData(this.category);
+    // 1. Fetch products from the data source
+    const data = await this.dataSource.getData(this.category);
 
-    // 2. Render the initial list
+    // 2. Ensure 'this.list' is strictly an array (handles whether getData returns an array or an object wrapper)
+    this.list = Array.isArray(data) ? data : data.Result || data.products || [];
+
+    // 3. Render the initial list
     this.renderList(this.list);
 
-    // 3. Initialize the sorting functionality
+    // 4. Initialize the sorting functionality
     this.initSorting();
 
-    // 4. title
-    document.querySelector(".title").textContent = this.category;
+    // 5. Title
+    const titleElement = document.querySelector(".title");
+    if (titleElement) {
+      titleElement.textContent = this.category;
+    }
   }
 
   renderList(list) {
