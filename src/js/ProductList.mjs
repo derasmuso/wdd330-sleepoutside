@@ -1,70 +1,38 @@
 import { renderListWithTemplate } from "./utils.mjs";
 
+function productCardTemplate(product) {
+  return `
+    <li class="product-card">
+      <a href="/product_pages/?product=${product.Id}">
+        <img src="${product.Images.PrimaryMedium}" alt="${product.Name}">
+        <h3>${product.Brand.Name}</h3>
+        <p>${product.NameWithoutBrand}</p>
+        <p class="product-card__price">$${product.FinalPrice}</p>
+      </a>
+    </li>
+    `;
+}
+
 export default class ProductList {
   constructor(category, dataSource, listElement) {
     this.category = category;
     this.dataSource = dataSource;
     this.listElement = listElement;
-    this.products = []; // Array to store fetched products for filtering or sorting
   }
 
   async init() {
-    // 1. Fetch products and assign them to this.products
-    this.products = await this.dataSource.getData();
-
-    // 2. Render the initial list
-    this.renderList(this.products);
-
-    // 3. Initialize the sorting functionality
-    this.initSorting();
+    const list = await this.dataSource.getData(this.category);
+    this.renderList(list);
+    document.querySelector(".title").textContent = this.category;
   }
 
   renderList(list) {
-    renderListWithTemplate(
-      productCardTemplate,
-      this.listElement,
-      list,
-      "afterbegin",
-      true,
-    );
+    // const htmlStrings = list.map(productCardTemplate);
+    // this.listElement.insertAdjacentHTML("afterbegin", htmlStrings.join(""));
+
+    // apply use new utility function instead of the commented code above
+    renderListWithTemplate(productCardTemplate, this.listElement, list);
+
   }
 
-  initSorting() {
-    const sortSelect = document.querySelector("#sort-select");
-    if (!sortSelect) return; // Exit if the sorting element is not present on this page
-
-    sortSelect.addEventListener("change", (event) => {
-      const sortValue = event.target.value;
-
-      // Create a shallow copy of the products array to avoid mutating the original data
-      let sortedProducts = [...this.products];
-
-      // Sort products based on the selected criteria
-      if (sortValue === "name-asc") {
-        sortedProducts.sort((a, b) => a.Name.localeCompare(b.Name));
-      } else if (sortValue === "name-desc") {
-        sortedProducts.sort((a, b) => b.Name.localeCompare(a.Name));
-      } else if (sortValue === "price-asc") {
-        sortedProducts.sort((a, b) => a.FinalPrice - b.FinalPrice);
-      } else if (sortValue === "price-desc") {
-        sortedProducts.sort((a, b) => b.FinalPrice - a.FinalPrice);
-      }
-
-      // Re-render the UI list with the newly sorted items
-      this.renderList(sortedProducts);
-    });
-  }
-}
-
-function productCardTemplate(product) {
-  return `
-    <li class="product-card">
-      <a href="/product_pages/?product=${product.Id}">
-        <img src="${product.Image}" alt="${product.Name}">
-        <h3 class="card__brand">${product.Brand.Name}</h3>
-        <h2 class="card__name">${product.NameWithoutBrand}</h2>
-        <p class="product-card__price">$${product.FinalPrice}</p>
-      </a>
-    </li>
-    `;
 }

@@ -1,4 +1,3 @@
-
 import { getLocalStorage, setLocalStorage } from "./utils.mjs";
 
 export default class ProductDetails {
@@ -15,10 +14,7 @@ export default class ProductDetails {
 
     document
       .getElementById("addToCart")
-      .addEventListener(
-        "click",
-        this.addProductToCart.bind(this)
-      );
+      .addEventListener("click", this.addProductToCart.bind(this));
   }
 
   addProductToCart() {
@@ -27,28 +23,27 @@ export default class ProductDetails {
     const cartItems = getLocalStorage("so-cart") || [];
 
     const itemAlreadyInCart = cartItems.find(
-      (item) => item.Id === this.product.Id
+      (item) => item.Id === this.product.Id,
     );
+
     // If the product is already in the cart, increase its quantity.
     if (itemAlreadyInCart) {
       itemAlreadyInCart.Quantity += 1;
     } else {
       this.product.Quantity = 1;
+
       // Add the current product to the cart array.
-      // Using an array allows multiple products to be stored.
       cartItems.push(this.product);
     }
 
     // Save the updated cart array back to localStorage.
     setLocalStorage("so-cart", cartItems);
 
-    // Disable the Add to Cart button after the product
-    // has been successfully added.
+    // Disable the Add to Cart button.
     const addToCartButton = document.getElementById("addToCart");
     addToCartButton.disabled = true;
 
-    // Change the button text to let the user know
-    // the product was added.
+    // Change the button text.
     addToCartButton.textContent = "Successfully Added to Cart";
   }
 
@@ -60,16 +55,15 @@ export default class ProductDetails {
 function productDetailsTemplate(product) {
   document.querySelector("h2").textContent = product.Brand.Name;
 
-  document.querySelector("h3").textContent =
-    product.NameWithoutBrand;
+  document.querySelector("h3").textContent = product.NameWithoutBrand;
 
   const productImage = document.getElementById("productImage");
 
-  productImage.src = product.Image;
+  // The API now uses PrimaryMediumPrimaryLarge for the product image.
+  productImage.src = product.PrimaryMediumPrimaryLarge;
   productImage.alt = product.NameWithoutBrand;
 
-  document.getElementById("productPrice").textContent =
-    product.FinalPrice;
+  document.getElementById("productPrice").textContent = product.FinalPrice;
 
   document.getElementById("productColor").textContent =
     product.Colors[0].ColorName;
@@ -77,6 +71,5 @@ function productDetailsTemplate(product) {
   document.getElementById("productDesc").innerHTML =
     product.DescriptionHtmlSimple;
 
-  document.getElementById("addToCart").dataset.id =
-    product.Id;
+  document.getElementById("addToCart").dataset.id = product.Id;
 }
