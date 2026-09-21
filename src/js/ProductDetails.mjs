@@ -1,7 +1,4 @@
-import {
-  getLocalStorage,
-  setLocalStorage
-} from "./utils.mjs";
+import { getLocalStorage, setLocalStorage } from "./utils.mjs";
 
 export default class ProductDetails {
   constructor(
@@ -70,9 +67,8 @@ export default class ProductDetails {
     } else {
       this.product.Quantity = 1;
 
-      cartItems.push(
-        this.product
-      );
+      // Add the current product to the cart array.
+      cartItems.push(this.product);
     }
 
     setLocalStorage(
