@@ -1,18 +1,5 @@
 import { renderListWithTemplate } from "./utils.mjs";
 
-function productCardTemplate(product) {
-  return `
-    <li class="product-card">
-      <a href="/product_pages/?product=${product.Id}">
-        <img src="${product.Images.PrimaryMedium}" alt="${product.Name}">
-        <h3>${product.Brand.Name}</h3>
-        <p>${product.NameWithoutBrand}</p>
-        <p class="product-card__price">$${product.FinalPrice}</p>
-      </a>
-    </li>
-    `;
-}
-
 export default class ProductList {
   constructor(
     category,
@@ -28,7 +15,7 @@ export default class ProductList {
   async init() {
     try {
       const products =
-        await this.dataSource.getData();
+        await this.dataSource.getData(this.category);
 
       this.renderList(products);
 
@@ -87,10 +74,9 @@ export default class ProductList {
     }
 
     countElement.textContent =
-      `${count} ${
-        count === 1
-          ? "item"
-          : "items"
+      `${count} ${count === 1
+        ? "item"
+        : "items"
       }`;
   }
 
@@ -126,10 +112,9 @@ export default class ProductList {
 
     breadcrumb.setAttribute(
       "aria-label",
-      `${this.category}, ${count} ${
-        count === 1
-          ? "item"
-          : "items"
+      `${this.category}, ${count} ${count === 1
+        ? "item"
+        : "items"
       }`
     );
   }
@@ -208,6 +193,7 @@ export default class ProductList {
       }
     );
   }
+}
 
 /*
  * Product card
@@ -239,9 +225,8 @@ function productCardTemplate(product) {
 
         <div class="product-card__image-wrapper">
 
-          ${
-            discount
-              ? `
+          ${discount
+      ? `
                 <span
                   class="discount-badge"
                   aria-label="${discount.percentage}% discount"
@@ -249,8 +234,8 @@ function productCardTemplate(product) {
                   ${discount.percentage}% OFF
                 </span>
               `
-              : ""
-          }
+      : ""
+    }
 
           <picture>
             <img
@@ -320,7 +305,7 @@ function calculateDiscount(product) {
     Math.round(
       ((retailPrice - finalPrice) /
         retailPrice) *
-        100
+      100
     );
 
   if (percentage <= 0) {
