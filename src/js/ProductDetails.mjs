@@ -1,16 +1,43 @@
 import { getLocalStorage, setLocalStorage } from "./utils.mjs";
 
 export default class ProductDetails {
-  constructor(productId, dataSource) {
+  constructor(
+    productId,
+    dataSource
+  ) {
     this.productId = productId;
     this.product = {};
     this.dataSource = dataSource;
   }
 
   async init() {
-    this.product = await this.dataSource.findProductById(this.productId);
+    try {
+      this.product =
+        await this.dataSource.findProductById(
+          this.productId
+        );
 
-    this.renderProductDetails();
+      if (!this.product) {
+        console.error(
+          "Product not found."
+        );
+
+        return;
+      }
+
+      this.renderProductDetails();
+
+      const addToCartButton =
+        document.getElementById(
+          "addToCart"
+        );
+
+      if (addToCartButton) {
+        addToCartButton.addEventListener(
+          "click",
+          this.addProductToCart.bind(this)
+        );
+      }
 
     document
       .getElementById("addToCart")
@@ -18,58 +45,107 @@ export default class ProductDetails {
   }
 
   addProductToCart() {
-    // Get the existing cart from localStorage.
-    // If there is no cart yet, create an empty array.
-    const cartItems = getLocalStorage("so-cart") || [];
+    const cartItems =
+      getLocalStorage(
+        "so-cart"
+      ) || [];
+
+    const itemAlreadyInCart =
+      cartItems.find(
+        (item) =>
+          item.Id === this.product.Id
+      );
 
     const itemAlreadyInCart = cartItems.find(
       (item) => item.Id === this.product.Id,
     );
     // If the product is already in the cart, increase its quantity.
     if (itemAlreadyInCart) {
-      itemAlreadyInCart.Quantity += 1;
+      itemAlreadyInCart.Quantity =
+        (itemAlreadyInCart.Quantity ||
+          1) + 1;
+
     } else {
       this.product.Quantity = 1;
+
       // Add the current product to the cart array.
-      // Using an array allows multiple products to be stored.
       cartItems.push(this.product);
     }
 
-    // Save the updated cart array back to localStorage.
-    setLocalStorage("so-cart", cartItems);
+    setLocalStorage(
+      "so-cart",
+      cartItems
+    );
 
-    // Disable the Add to Cart button after the product
-    // has been successfully added.
-    const addToCartButton = document.getElementById("addToCart");
-    addToCartButton.disabled = true;
+    const addToCartButton =
+      document.getElementById(
+        "addToCart"
+      );
 
-    // Change the button text to let the user know
-    // the product was added.
-    addToCartButton.textContent = "Successfully Added to Cart";
+    if (addToCartButton) {
+      addToCartButton.disabled =
+        true;
+
+      addToCartButton.textContent =
+        "Successfully Added to Cart";
+    }
   }
 
   renderProductDetails() {
-    productDetailsTemplate(this.product);
+    productDetailsTemplate(
+      this.product,
+      this.dataSource.category
+    );
   }
 }
 
-function productDetailsTemplate(product) {
-  document.querySelector("h2").textContent = product.Brand.Name;
+function productDetailsTemplate(
+  product,
+  category
+) {
+  
+  const brandElement =
+    document.querySelector("h2");
 
   document.querySelector("h3").textContent = product.NameWithoutBrand;
 
-  const productImage = document.getElementById("productImage");
+  const nameElement =
+    document.querySelector("h3");
 
   productImage.src = product.Images.PrimaryLarge;
   productImage.alt = product.NameWithoutBrand;
 
   document.getElementById("productPrice").textContent = product.FinalPrice;
 
-  document.getElementById("productColor").textContent =
-    product.Colors[0].ColorName;
+    breadcrumb.innerHTML = `
+      <a
+        href="/product-list/?category=${encodeURIComponent(
+          category
+        )}"
+      >
+        ${escapeHtml(categoryName)}
+      </a>
+    `;
 
-  document.getElementById("productDesc").innerHTML =
-    product.DescriptionHtmlSimple;
+    breadcrumb.setAttribute(
+      "aria-label",
+      categoryName
+    );
+  }
 
   document.getElementById("addToCart").dataset.id = product.Id;
+}
+
+function escapeHtml(value = "") {
+  return String(value).replace(
+    /[&<>"']/g,
+    (character) =>
+      ({
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#039;"
+      })[character]
+  );
 }

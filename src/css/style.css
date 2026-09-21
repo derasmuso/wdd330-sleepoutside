@@ -1,6 +1,7 @@
 :root {
   --font-body: Arial, Helvetica, sans-serif;
   --font-headline: Haettenschweiler, "Arial Narrow Bold", sans-serif;
+
   /* Colors */
   --primary-color: #f0a868;
   --secondary-color: #525b0f;
@@ -13,6 +14,7 @@
   --small-font: 0.8em;
   --large-font: 1.2em;
 }
+
 
 * {
   margin: 0;
@@ -28,11 +30,18 @@ body {
 
 img {
   max-width: 100%;
+  height: auto;
 }
+
+p {
+  padding: 0.75rem;
+}
+
 
 header {
   display: flex;
   justify-content: space-between;
+  align-items: center;
   padding: 0.5rem;
 }
 
@@ -54,6 +63,7 @@ p {
 .logo img {
   width: 60px;
   height: 60px;
+  object-fit: contain;
 }
 
 .logo a {
@@ -83,6 +93,11 @@ p {
 }
 
 /* Search form styles */
+.highlight {
+  color: var(--tertiary-color);
+}
+
+
 .search-form {
   display: flex;
   align-items: center;
@@ -101,6 +116,10 @@ p {
   font-size: var(--small-font);
 }
 
+.search-results__message {
+  padding: 0 1rem;
+}
+
 .visually-hidden {
   position: absolute;
   width: 1px;
@@ -113,9 +132,6 @@ p {
   border: 0;
 }
 
-.search-results__message {
-  padding: 0 1rem;
-}
 
 /* Hero section styles */
 .hero {
@@ -144,6 +160,11 @@ button {
   font-size: var(--large-font);
   cursor: pointer;
 }
+
+button:hover {
+  opacity: 0.9;
+}
+
 
 .divider {
   border-bottom: 2px solid var(--primary-color);
@@ -444,7 +465,56 @@ button {
   }
 }
 
-footer {
-  font-size: var(--small-font);
-  padding: 1em;
+@media screen and (min-width: 600px) {
+  .product-card {
+    flex: 1 1 30%;
+  }
+}
+
+/* Categories */
+.categories {
+  margin: 2rem 0;
+}
+
+.categories h2 {
+  margin-bottom: 1.5rem;
+}
+
+.category-list {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.5rem;
+}
+
+.category-list a {
+  display: block;
+  padding: 1rem;
+  text-align: center;
+  text-decoration: none;
+  background-color: #f5f5f5;
+  border-radius: 8px;
+}
+
+.category-list img {
+  width: 100%;
+  max-width: 180px;
+  height: 150px;
+  object-fit: contain;
+  margin: 0 auto;
+}
+
+.category-list h3 {
+  margin-top: 1rem;
+}
+
+@media (max-width: 700px) {
+  .category-list {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media screen and (min-width: 1000px) {
+  .product-card {
+    flex: 1 1 22%;
+  }
 }
