@@ -31,9 +31,20 @@
       </div>
     </header>
     <main class="divider">
+      <nav class="breadcrumb" id="breadcrumb" aria-label="Breadcrumb"></nav>
       <section class="products">
         <h1>Search Results</h1>
         <p class="search-results__message" role="status"></p>
+        <div class="sorting-container">
+          <label for="sort-select">Sort by:</label>
+          <select id="sort-select">
+            <option value="">Select...</option>
+            <option value="name-asc">Name (A - Z)</option>
+            <option value="name-desc">Name (Z - A)</option>
+            <option value="price-asc">Price (Low to High)</option>
+            <option value="price-desc">Price (High to Low)</option>
+          </select>
+        </div>
         <ul class="product-list"></ul>
       </section>
     </main>

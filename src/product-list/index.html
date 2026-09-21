@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0"
+    />
+
+    <title>Sleep Outside | Products</title>
+
+    <link
+      rel="stylesheet"
+      href="/css/style.css"
+    />
+
+    <script
+      type="module"
+      src="/js/product-list.mjs"
+    ></script>
+  </head>
+
+  <body>
+    <!-- Navbar -->
+    <header
+      class="divider"
+      id="main-header"
+    ></header>
+
+    <!-- Breadcrumb immediately below navbar -->
+    <nav
+      class="breadcrumb"
+      id="breadcrumb"
+      aria-label="Breadcrumb"
+    ></nav>
+
+    <main class="divider">
+      <section class="products">
+
+        <div class="products__header">
+          <div>
+            <h1 id="product-list-title">
+              Products
+            </h1>
+
+            <p
+              id="product-count"
+              class="product-count"
+            ></p>
+          </div>
+
+          <div class="sorting-container">
+            <label for="sort-select">
+              Sort by:
+            </label>
+
+            <select id="sort-select">
+              <option value="">
+                Select...
+              </option>
+
+              <option value="name-asc">
+                Name (A - Z)
+              </option>
+
+              <option value="name-desc">
+                Name (Z - A)
+              </option>
+
+              <option value="price-asc">
+                Price (Low to High)
+              </option>
+
+              <option value="price-desc">
+                Price (High to Low)
+              </option>
+            </select>
+          </div>
+        </div>
+
+        <ul class="product-list"></ul>
+
+      </section>
+    </main>
+
+    <footer id="main-footer"></footer>
+  </body>
+</html>
