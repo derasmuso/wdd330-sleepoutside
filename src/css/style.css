@@ -164,6 +164,23 @@ button {
   fill: gray;
 }
 
+/* Cart item count badge */
+.cart-count {
+  position: absolute;
+  top: 0;
+  right: -5px;
+  background-color: var(--tertiary-color);
+  color: white;
+  font-size: 0.7rem;
+  font-weight: bold;
+  min-width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 /* Mission section styles */
 .mission {
   position: absolute;
@@ -202,6 +219,7 @@ button {
   padding-bottom: 1rem;
 }
 
+/* Products header title */
 .products-header .title {
   font-size: 1.5rem;
   font-weight: bold;
@@ -300,7 +318,7 @@ button {
 /* Cart list card layout */
 .cart-card {
   display: grid;
-  grid-template-columns: 100px 1fr 130px; /* Adjusted column 3 width to fit price and remove button */
+  grid-template-columns: 100px 1fr 130px;
   gap: 1rem;
   font-size: 0.9rem;
   align-items: center;
@@ -347,12 +365,12 @@ button {
   grid-column: 3;
 }
 
-/* Container for price and remove button (placed in row 2, column 3) */
+/* Container for price and remove button */
 .cart-card__price-action {
   grid-row: 2;
   grid-column: 3;
   display: flex;
-  justify-content: space-between; /* Puts price on the left and X on the right inside column 3 */
+  justify-content: space-between;
   align-items: center;
   gap: 0.5rem;
 }
@@ -372,7 +390,7 @@ button {
 }
 
 .cart-card__remove:hover {
-  transform: scale(1.2); /* Slight zoom effect on hover */
+  transform: scale(1.2);
 }
 
 /* Categories section styles */
@@ -440,7 +458,7 @@ button {
 
   .cart-card {
     font-size: inherit;
-    grid-template-columns: 150px 1fr 120px; /* Adjusted for uniform proportion */
+    grid-template-columns: 150px 1fr 120px;
   }
 }
 
