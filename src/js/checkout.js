@@ -1,5 +1,5 @@
 // src/js/checkout.js
-import { loadHeaderFooter } from "./utils.mjs";
+import { loadHeaderFooter, alertMessage } from "./utils.mjs";
 import CheckoutProcess from "./CheckoutProcess.mjs";
 
 loadHeaderFooter();
@@ -7,6 +7,7 @@ loadHeaderFooter();
 const checkout = new CheckoutProcess("so-cart", ".checkout-summary");
 checkout.init();
 
+// Calculate tax/shipping/total when zip code is filled
 const zipInput = document.getElementById("zip");
 if (zipInput) {
   zipInput.addEventListener("blur", () => {
@@ -14,11 +15,13 @@ if (zipInput) {
   });
 }
 
+// Handle form submission
 const form = document.getElementById("checkoutForm");
 if (form) {
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
 
+    // Validate form
     if (!form.checkValidity()) {
       form.reportValidity();
       return;
@@ -28,12 +31,19 @@ if (form) {
 
     try {
       await checkout.checkout(form);
-      alert("Order placed successfully!");
+      // Success! Clear cart and go to success page
       localStorage.removeItem("so-cart");
-      window.location.href = "/index.html";
+      window.location.href = "/checkout/success.html";
     } catch (error) {
-      alert("There was a problem placing your order. Please try again.");
-      console.error(error);
+      // Show error to user
+      console.error("Checkout error:", error);
+      const message =
+        error.message?.message ||
+        error.message ||
+        "There was a problem placing your order.";
+      alertMessage(
+        typeof message === "string" ? message : JSON.stringify(message),
+      );
     }
   });
 }
