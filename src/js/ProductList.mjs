@@ -14,8 +14,7 @@ export default class ProductList {
 
   async init() {
     try {
-      const products =
-        await this.dataSource.getData();
+      const products = await this.dataSource.getData(this.category);
 
       this.renderList(products);
 
@@ -213,7 +212,10 @@ function productCardTemplate(product) {
     product.Brand?.Name || "";
 
   const productImage =
-    product.Image || "";
+    product.Images?.PrimaryMedium ||
+    product.Images?.PrimaryLarge ||
+    product.Image ||
+    "/images/placeholder.jpg";
 
   const productUrl =
     `/product_pages/?product=${encodeURIComponent(

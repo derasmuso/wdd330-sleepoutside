@@ -1,12 +1,19 @@
-import { getParam } from "./utils.mjs";
-import ProductData from "./ProductData.mjs";
+// src/js/product.js
+import { getParam, loadHeaderFooter } from "./utils.mjs";
+import ExternalServices from "./ExternalServices.mjs";
 import ProductDetails from "./ProductDetails.mjs";
-import { loadHeaderFooter } from "./utils.mjs";
-
-const dataSource = new ProductData("tents");
-const productId = getParam("product");
-
-const product = new ProductDetails(productId, dataSource);
 
 loadHeaderFooter();
-product.init();
+
+const productId = getParam("product");
+
+if (!productId) {
+  document.querySelector("main").innerHTML = `
+    <h2>No Product Selected</h2>
+    <p>Please select a product from the <a href="/index.html">homepage</a>.</p>
+  `;
+} else {
+  const dataSource = new ExternalServices();
+  const product = new ProductDetails(productId, dataSource);
+  product.init();
+}

@@ -1,13 +1,8 @@
-import {
-  getLocalStorage,
-  setLocalStorage
-} from "./utils.mjs";
+// src/js/ProductDetails.mjs
+import { setLocalStorage, getLocalStorage } from "./utils.mjs";
 
 export default class ProductDetails {
-  constructor(
-    productId,
-    dataSource
-  ) {
+  constructor(productId, dataSource) {
     this.productId = productId;
     this.product = {};
     this.dataSource = dataSource;
@@ -15,313 +10,113 @@ export default class ProductDetails {
 
   async init() {
     try {
-      this.product =
-        await this.dataSource.findProductById(
-          this.productId
-        );
-
+      this.product = await this.dataSource.findProductById(this.productId);
       if (!this.product) {
-        console.error(
-          "Product not found."
-        );
-
+        this.renderNotFound();
         return;
       }
-
       this.renderProductDetails();
-
-      const addToCartButton =
-        document.getElementById(
-          "addToCart"
-        );
-
-      if (addToCartButton) {
-        addToCartButton.addEventListener(
-          "click",
-          this.addProductToCart.bind(this)
-        );
-      }
-
+      document
+        .getElementById("addToCart")
+        ?.addEventListener("click", this.addProductToCart.bind(this));
     } catch (error) {
-      console.error(
-        "Unable to load product:",
-        error
-      );
-    }
-  }
-
-  addProductToCart() {
-    const cartItems =
-      getLocalStorage(
-        "so-cart"
-      ) || [];
-
-    const itemAlreadyInCart =
-      cartItems.find(
-        (item) =>
-          item.Id === this.product.Id
-      );
-
-    if (itemAlreadyInCart) {
-      itemAlreadyInCart.Quantity =
-        (itemAlreadyInCart.Quantity ||
-          1) + 1;
-
-    } else {
-      this.product.Quantity = 1;
-
-      cartItems.push(
-        this.product
-      );
-    }
-
-    setLocalStorage(
-      "so-cart",
-      cartItems
-    );
-
-    const addToCartButton =
-      document.getElementById(
-        "addToCart"
-      );
-
-    if (addToCartButton) {
-      addToCartButton.disabled =
-        true;
-
-      addToCartButton.textContent =
-        "Successfully Added to Cart";
+      console.error("Error initializing product:", error);
+      this.renderError();
     }
   }
 
   renderProductDetails() {
-    productDetailsTemplate(
-      this.product,
-      this.dataSource.category
-    );
-  }
-}
+    const main = document.querySelector("main");
+    if (!main) return;
 
-function productDetailsTemplate(
-  product,
-  category
-) {
-  
-  const brandElement =
-    document.querySelector("h2");
+    const brand = this.product.Brand?.Name || "";
+    const name = this.product.Name || "Product";
+    const image =
+      this.product.Images?.PrimaryLarge ||
+      this.product.Images?.PrimaryMedium ||
+      "/images/placeholder.jpg";
 
-  if (brandElement) {
-    brandElement.textContent =
-      product.Brand?.Name || "";
-  }
+    let price = this.product.FinalPrice || this.product.ListPrice || 0;
+    price = typeof price === "number" ? price : parseFloat(price) || 0;
 
-  const nameElement =
-    document.querySelector("h3");
+    const color = this.product.Colors?.[0]?.ColorName || "";
+    const description =
+      this.product.DescriptionHtmlSimple ||
+      this.product.Description ||
+      "No description available.";
+    const id = this.product.Id || "";
 
-  if (nameElement) {
-    nameElement.textContent =
-      product.NameWithoutBrand ||
-      product.Name ||
-      "";
-  }
+    // Discount flag
+    let discountHtml = "";
+    const retail = Number(this.product.SuggestedRetailPrice);
+    const final = Number(this.product.FinalPrice);
+    if (
+      Number.isFinite(retail) &&
+      Number.isFinite(final) &&
+      retail > final
+    ) {
+      const savings = retail - final;
+      const percent = Math.round((savings / retail) * 100);
+      discountHtml = `<span class="discount-flag">${percent}% OFF — Save $${savings.toFixed(2)}</span>`;
+    }
 
-  const productImage =
-    document.getElementById(
-      "productImage"
-    );
-
-  if (productImage) {
-    productImage.src =
-      product.Image || "";
-
-    productImage.alt =
-      product.NameWithoutBrand ||
-      product.Name ||
-      "Product";
-
-    
-    productImage.removeAttribute(
-      "srcset"
-    );
-
-    productImage.removeAttribute(
-      "sizes"
-    );
-  }
-
-  
-  const breadcrumb =
-    document.querySelector(
-      "#breadcrumb"
-    );
-
-  if (breadcrumb) {
-    const categoryName =
-      formatCategoryName(
-        category
-      );
-
-    breadcrumb.innerHTML = `
-      <a
-        href="/product-list/?category=${encodeURIComponent(
-          category
-        )}"
-      >
-        ${escapeHtml(categoryName)}
-      </a>
+    main.innerHTML = `
+      <section class="product-detail">
+        <h3>${brand}</h3>
+        <h2 class="divider">${name}</h2>
+        <img class="divider" src="${image}" alt="${name}" loading="lazy" onerror="this.src='/images/placeholder.jpg'">
+        ${discountHtml}
+        <p class="product-card__price">$${price.toFixed(2)}</p>
+        <p class="product__color">${color}</p>
+        <p class="product__description">${description}</p>
+        <div class="product-detail__add">
+          <button id="addToCart" data-id="${id}">Add to Cart</button>
+        </div>
+      </section>
     `;
-
-    breadcrumb.setAttribute(
-      "aria-label",
-      categoryName
-    );
   }
 
-  /*
-   * Discount
-   */
-  const discountFlag =
-    document.getElementById(
-      "discountFlag"
-    );
+  addProductToCart() {
+    const cartItems = getLocalStorage("so-cart") || [];
+    const existing = cartItems.find((item) => item.Id === this.product.Id);
 
-  const retailPrice =
-    Number(
-      product.SuggestedRetailPrice
-    );
+    if (existing) {
+      existing.quantity = (existing.quantity || 1) + 1;
+    } else {
+      this.product.quantity = 1;
+      cartItems.push(this.product);
+    }
 
-  const finalPrice =
-    Number(
-      product.FinalPrice
-    );
+    setLocalStorage("so-cart", cartItems);
 
-  if (
-    discountFlag &&
-    Number.isFinite(
-      retailPrice
-    ) &&
-    Number.isFinite(
-      finalPrice
-    ) &&
-    retailPrice > finalPrice
-  ) {
-    const savings =
-      retailPrice -
-      finalPrice;
-
-    const percentage =
-      Math.round(
-        (savings /
-          retailPrice) *
-          100
-      );
-
-    discountFlag.textContent =
-      `${percentage}% OFF — Save $${savings.toFixed(
-        2
-      )}`;
-
-    discountFlag.hidden =
-      false;
-
-  } else if (discountFlag) {
-    discountFlag.hidden =
-      true;
+    const btn = document.getElementById("addToCart");
+    if (btn) {
+      btn.disabled = true;
+      btn.textContent = "Successfully Added to Cart";
+      setTimeout(() => {
+        btn.disabled = false;
+        btn.textContent = "Add to Cart";
+      }, 2000);
+    }
   }
 
-  /*
-   * Price
-   */
-  const priceElement =
-    document.getElementById(
-      "productPrice"
-    );
-
-  if (priceElement) {
-    priceElement.textContent =
-      finalPrice.toFixed(2);
+  renderNotFound() {
+    const main = document.querySelector("main");
+    if (main) {
+      main.innerHTML = `
+        <h2>Product Not Found</h2>
+        <p>Please select a product from the <a href="/index.html">homepage</a>.</p>
+      `;
+    }
   }
 
-  /*
-   * Color
-   */
-  const colorElement =
-    document.getElementById(
-      "productColor"
-    );
-
-  if (colorElement) {
-    colorElement.textContent =
-      product.Colors?.[0]
-        ?.ColorName || "";
+  renderError() {
+    const main = document.querySelector("main");
+    if (main) {
+      main.innerHTML = `
+        <h2>Error Loading Product</h2>
+        <p>Please try again later.</p>
+      `;
+    }
   }
-
-  /*
-   * Description
-   */
-  const descriptionElement =
-    document.getElementById(
-      "productDesc"
-    );
-
-  if (descriptionElement) {
-    descriptionElement.innerHTML =
-      product.DescriptionHtmlSimple ||
-      "";
-  }
-
-  /*
-   * Add to cart
-   */
-  const addToCartButton =
-    document.getElementById(
-      "addToCart"
-    );
-
-  if (addToCartButton) {
-    addToCartButton.dataset.id =
-      product.Id;
-  }
-}
-
-/*
- * Convert:
- *
- * tents
- * ->
- * Tents
- *
- * sleeping-bags
- * ->
- * Sleeping Bags
- */
-function formatCategoryName(
-  category
-) {
-  if (!category) {
-    return "Products";
-  }
-
-  return category
-    .split("-")
-    .map(
-      (word) =>
-        word.charAt(0).toUpperCase() +
-        word.slice(1)
-    )
-    .join(" ");
-}
-
-function escapeHtml(value = "") {
-  return String(value).replace(
-    /[&<>"']/g,
-    (character) =>
-      ({
-        "&": "&amp;",
-        "<": "&lt;",
-        ">": "&gt;",
-        '"': "&quot;",
-        "'": "&#039;"
-      })[character]
-  );
 }
