@@ -68,7 +68,6 @@ function renderCartContents() {
   setupRemoveButtons();
 }
 
-// Cart item template
 function cartItemTemplate(item) {
   // Color
   let colorName = "N/A";
@@ -91,9 +90,12 @@ function cartItemTemplate(item) {
   const quantity = item.quantity || 1;
   const subtotal = price * quantity;
 
+  // Product URL
+  const productUrl = `/product_pages/?product=${item.Id}`;
+
   return `
     <li class="cart-card divider cart-item">
-      <a href="#" class="cart-card__image">
+      <a href="${productUrl}" class="cart-card__image">
         <img
           src="${image}"
           alt="${item.Name || "Product"}"
@@ -102,11 +104,15 @@ function cartItemTemplate(item) {
         />
       </a>
       <div class="cart-item-details">
-        <a href="#">
+        <a href="${productUrl}">
           <h2 class="card__name">${item.Name || "Unknown Product"}</h2>
         </a>
         <p class="cart-card__color">${colorName}</p>
-        <p class="cart-card__quantity">Qty: ${quantity}</p>
+        <div class="cart-item-quantity">
+          <button class="qty-btn qty-minus" data-id="${item.Id}">−</button>
+          <span class="qty-display">${quantity}</span>
+          <button class="qty-btn qty-plus" data-id="${item.Id}">+</button>
+        </div>
         <p class="cart-card__price">$${price.toFixed(2)}</p>
         <p class="cart-item-subtotal">Subtotal: $${subtotal.toFixed(2)}</p>
       </div>
@@ -145,7 +151,6 @@ function setupRemoveButtons() {
   const cartContainer = document.querySelector(".product-list");
   if (!cartContainer) return;
 
-  // Remove existing listeners by cloning
   const newContainer = cartContainer.cloneNode(true);
   cartContainer.parentNode.replaceChild(newContainer, cartContainer);
 

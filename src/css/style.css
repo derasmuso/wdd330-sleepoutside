@@ -435,6 +435,40 @@ footer {
   padding: 1em;
 }
 
+.cart-item-quantity {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 8px 0;
+}
+
+.qty-btn {
+  width: 30px;
+  height: 30px;
+  border: 1px solid #ddd;
+  background: white;
+  border-radius: 5px;
+  font-size: 1.2rem;
+  cursor: pointer;
+  color: #2c7a4d;
+  font-weight: bold;
+  transition:
+    background 0.2s,
+    color 0.2s;
+}
+
+.qty-btn:hover {
+  background: #2c7a4d;
+  color: white;
+}
+
+.qty-display {
+  min-width: 30px;
+  text-align: center;
+  font-weight: bold;
+  font-size: 1.1rem;
+}
+
 @media screen and (max-width: 599px) {
   .products__header {
     flex-direction: column;
