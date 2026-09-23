@@ -1,7 +1,11 @@
+<<<<<<< HEAD
 import {
   getLocalStorage,
   setLocalStorage
 } from "./utils.mjs";
+=======
+import { getLocalStorage, setLocalStorage } from "./utils.mjs";
+>>>>>>> 279938a3d8dddbbaedac89c087e25fdd1f3cd75e
 
 export default class ProductDetails {
   constructor(
@@ -25,6 +29,7 @@ export default class ProductDetails {
           "Product not found."
         );
 
+<<<<<<< HEAD
         return;
       }
 
@@ -48,6 +53,11 @@ export default class ProductDetails {
         error
       );
     }
+=======
+    document
+      .getElementById("addToCart")
+      .addEventListener("click", this.addProductToCart.bind(this));
+>>>>>>> 279938a3d8dddbbaedac89c087e25fdd1f3cd75e
   }
 
   addProductToCart() {
@@ -62,6 +72,13 @@ export default class ProductDetails {
           item.Id === this.product.Id
       );
 
+<<<<<<< HEAD
+=======
+    const itemAlreadyInCart = cartItems.find(
+      (item) => item.Id === this.product.Id,
+    );
+    // If the product is already in the cart, increase its quantity.
+>>>>>>> 279938a3d8dddbbaedac89c087e25fdd1f3cd75e
     if (itemAlreadyInCart) {
       itemAlreadyInCart.Quantity =
         (itemAlreadyInCart.Quantity ||
@@ -110,14 +127,19 @@ function productDetailsTemplate(
   const brandElement =
     document.querySelector("h2");
 
+<<<<<<< HEAD
   if (brandElement) {
     brandElement.textContent =
       product.Brand?.Name || "";
   }
+=======
+  document.querySelector("h3").textContent = product.NameWithoutBrand;
+>>>>>>> 279938a3d8dddbbaedac89c087e25fdd1f3cd75e
 
   const nameElement =
     document.querySelector("h3");
 
+<<<<<<< HEAD
   if (nameElement) {
     nameElement.textContent =
       product.NameWithoutBrand ||
@@ -129,6 +151,12 @@ function productDetailsTemplate(
     document.getElementById(
       "productImage"
     );
+=======
+  productImage.src = product.Images.PrimaryLarge;
+  productImage.alt = product.NameWithoutBrand;
+
+  document.getElementById("productPrice").textContent = product.FinalPrice;
+>>>>>>> 279938a3d8dddbbaedac89c087e25fdd1f3cd75e
 
   if (productImage) {
     productImage.src =
@@ -139,6 +167,7 @@ function productDetailsTemplate(
       product.Name ||
       "Product";
 
+<<<<<<< HEAD
     
     productImage.removeAttribute(
       "srcset"
@@ -282,6 +311,9 @@ function productDetailsTemplate(
     addToCartButton.dataset.id =
       product.Id;
   }
+=======
+  document.getElementById("addToCart").dataset.id = product.Id;
+>>>>>>> 279938a3d8dddbbaedac89c087e25fdd1f3cd75e
 }
 
 /*

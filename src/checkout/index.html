@@ -18,6 +18,38 @@
       <section class="products">
         <h2>Review & Place your Order</h2>
       </section>
+      <form action="">
+        <fieldset>
+          <legend>Information</legend>
+          <label for="fname">First Name: </label>
+          <input type="text" id="fname" name="fname" />
+          <label for="lname">Last Name: </label>
+          <input type="text" id="lname" name="lname" />
+          <label for="saddress">Street Address: </label>
+          <input type="text" id="saddress" name="saddress" />
+          <label for="city">City: </label>
+          <input type="text" id="city" name="city" />
+          <label for="state">State: </label>
+          <input type="text" id="state" name="state" />
+          <label for="zip">Zip Code: </label>
+          <input type="number" id="zip" name="zip" />
+        </fieldset>
+        <fieldset>
+          <legend>Payment</legend>
+          <label for="ccn">Credit Card Number:</label>
+          <input type="number" id="ccn" name="ccn" />
+          <label for="expiration">Expiration Date:</label>
+          <input type="date" id="expiration" name="expiration" />
+          <label for="security">Security Code:</label>
+          <input type="number" id="security" name="security" />
+        </fieldset>
+      </form>
+      <section id="ordersumm">
+        <p id="subtotal">Subtotal</p>
+        <p id="tax">Tax</p>
+        <p id="shipping">Shipping Estimate</p>
+        <p id="ordertotal">Order Total</p>
+      </section>
     </main>
 
     <footer id="main-header"></footer>

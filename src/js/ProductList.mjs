@@ -13,6 +13,7 @@ export default class ProductList {
   }
 
   async init() {
+<<<<<<< HEAD
     try {
       const products =
         await this.dataSource.getData();
@@ -38,6 +39,24 @@ export default class ProductList {
       this.renderList([]);
       this.updateProductCount(0);
       this.renderBreadcrumb(0);
+=======
+    // 1. Fetch products from the data source
+    const data = await this.dataSource.getData(this.category);
+
+    // 2. Ensure 'this.list' is strictly an array (handles whether getData returns an array or an object wrapper)
+    this.list = Array.isArray(data) ? data : data.Result || data.products || [];
+
+    // 3. Render the initial list
+    this.renderList(this.list);
+
+    // 4. Initialize the sorting functionality
+    this.initSorting();
+
+    // 5. Title
+    const titleElement = document.querySelector(".title");
+    if (titleElement) {
+      titleElement.textContent = this.category;
+>>>>>>> 279938a3d8dddbbaedac89c087e25fdd1f3cd75e
     }
   }
 
@@ -131,11 +150,16 @@ export default class ProductList {
       return;
     }
 
+<<<<<<< HEAD
     sortSelect.addEventListener(
       "change",
       (event) => {
         const sortValue =
           event.target.value;
+=======
+      // Create a shallow copy of the products array to avoid mutating the original data
+      let sortedProducts = [...this.list];
+>>>>>>> 279938a3d8dddbbaedac89c087e25fdd1f3cd75e
 
         const sortedProducts =
           [...this.products];
@@ -222,6 +246,7 @@ function productCardTemplate(product) {
 
   return `
     <li class="product-card">
+<<<<<<< HEAD
 
       <a href="${productUrl}">
 
@@ -264,6 +289,13 @@ function productCardTemplate(product) {
           $${formatPrice(product.FinalPrice)}
         </p>
 
+=======
+      <a href="/product_pages/?product=${product.Id}">
+        <img src="${product.Images.PrimaryMedium}" alt="${product.Name}">
+        <h3 class="card__brand">${product.Brand.Name}</h3>
+        <h2 class="card__name">${product.NameWithoutBrand}</h2>
+        <p class="product-card__price">$${product.FinalPrice}</p>
+>>>>>>> 279938a3d8dddbbaedac89c087e25fdd1f3cd75e
       </a>
 
     </li>

@@ -1,34 +1,33 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Sleep Outside | Home</title>
-    <link rel="stylesheet" href="/css/style.css" />
-    <script src="js/main.js" type="module"></script>
-  </head>
 
-  <body>
-    <header class="divider" id="main-header"></header>
-    <main class="divider">
-      <div class="hero">
-        <img
-          src="/images/banner-sm.jpg"
-          srcset="images/banner-sm.jpg 500w, images/banner.jpg"
-          alt="image of a high mountain lake"
-        />
-        <div class="logo logo--square">
-          <img src="/images/noun_Tent_2517.svg" alt="tent image for logo" />
-          <div>Sleep<span class="highlight">Outside</span></div>
-        </div>
-        <div class="mission">
-          <p>
-            Our mission is to provide you with everything you need to sleep
-            outside comfortably at an affordable price.
-          </p>
-        </div>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sleep Outside | Home</title>
+  <link rel="stylesheet" href="/css/style.css" />
+  <script src="/js/main.js" type="module"></script>
+</head>
+
+<body>
+  <header class="divider" id="main-header"></header>
+  <main class="divider">
+    <div class="hero">
+      <img src="/images/banner-sm.jpg" srcset="images/banner-sm.jpg 500w, images/banner.jpg"
+        alt="image of a high mountain lake" />
+      <div class="logo logo--square">
+        <img src="/images/noun_Tent_2517.svg" alt="tent image for logo" />
+        <div>Sleep<span class="highlight">Outside</span></div>
       </div>
+      <div class="mission">
+        <p>
+          Our mission is to provide you with everything you need to sleep
+          outside comfortably at an affordable price.
+        </p>
+      </div>
+    </div>
 
+<<<<<<< HEAD
       <section class="products">
         <h2>Top Products</h2>
         <!-- Sorting Container Added Here -->
@@ -41,10 +40,64 @@
             <option value="price-asc">Price (Low to High)</option>
             <option value="price-desc">Price (High to Low)</option>
           </select>
+=======
+    <section class="categories-section">
+      <h2>Categories</h2>
+
+      <div class="categories-container">
+        <!-- Category 1 -->
+        <a href="/product_listing/index.html?category=tents">
+          <div class="category-card">
+            <img src="/images/categories/category-tents.svg" alt="Tents" />
+            <h3>Tents</h3>
+          </div>
+        </a>
+        <!-- Category 2 -->
+        <a href="/product_listing/index.html?category=backpacks">
+          <div class="category-card">
+            <img src="/images/categories/category-backpacks.svg" alt="Backpacks" />
+            <h3>Backpacks</h3>
+          </div>
+        </a>
+        <!-- Category 3 -->
+        <a href="/product_listing/index.html?category=sleeping-bags">
+          <div class="category-card">
+            <img src="/images/categories/category-sleepingbags.svg" alt="Sleeping Bags" />
+            <h3>Sleeping Bags</h3>
+          </div>
+        </a>
+        <!-- Category 4 -->
+
+        <a href="/product_listing/index.html?category=hammocks">
+          <div class="category-card">
+            <img src="/images/categories/category-hammocks.svg" alt="Hammocks" />
+            <h3>Hammocks</h3>
+          </div>
+        </a>
+      </div>
+    </section>
+    <ul class="product-list"></ul>
+
+    <!-- Newsletter -->
+    <section class="newsletter">
+      <h2>Subscribe to our Newsletter</h2>
+      <p>Stay up to date with the latest news and offers from Sleep Outside.</p>
+      <form id="newsletter-form" action="thank-you/newsletter.html" method="GET">
+        <div class="form-group">
+          <label for="fname">First Name: </label>
+          <input type="text" id="fname" name="fname" required />
+>>>>>>> 279938a3d8dddbbaedac89c087e25fdd1f3cd75e
         </div>
-        <ul class="product-list"></ul>
-      </section>
-    </main>
-    <footer id="main-footer"></footer>
-  </body>
+        <div class="form-group">
+          <label for="email">Email: </label>
+          <input type="email" id="email" name="email" required />
+        </div>
+        <button type="submit">Subscribe</button>
+      </form>
+
+    </section>
+  </main>
+  <footer id="main-footer"></footer>
+</body>
+
 </html>

@@ -19,6 +19,8 @@ if (!searchTerm) {
 }
 
 async function searchProducts(term) {
+  console.log("Término recibido para buscar:", term); // <-- 1. Verifica si esto sale en la consola
+
   const dataSource = new ProductData("tents");
   const productList = new ProductList(
     "Search results",
@@ -27,7 +29,9 @@ async function searchProducts(term) {
   );
 
   try {
-    const products = await dataSource.search(term);
+    const products = (await dataSource.search(term)) || [];
+    console.log("Productos encontrados:", products); // <-- 2. Verifica si la API devuelve datos
+
     productList.renderList(products);
     productList.renderBreadcrumb(products.length);
     productList.products = products;
@@ -35,7 +39,10 @@ async function searchProducts(term) {
     resultMessage.textContent = products.length
       ? `${products.length} result${products.length === 1 ? "" : "s"} for “${term}”.`
       : `No products found for “${term}”.`;
-  } catch {
+  } catch (error) {
+    // <-- Añade 'error' aquí
+    console.error("Error detallado en la búsqueda:", error); // <-- 3. Muestra el error real
+
     productList.renderList([]);
     resultMessage.textContent =
       "We couldn't load search results. Please try again.";
