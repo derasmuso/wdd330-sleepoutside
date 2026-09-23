@@ -78,7 +78,7 @@ p {
   margin-top: -1.3em;
 }
 
-.logo--square > div {
+.logo--square>div {
   margin-top: -1.7em;
 }
 
@@ -444,6 +444,84 @@ button {
   color: #444;
   margin: 0;
 }
+
+/* Newsletter section on homepage */
+
+.newsletter {
+  max-width: 480px;
+  margin: 3rem auto;
+  padding: 2rem;
+  text-align: center;
+  background-color: #fff;
+  border: 1px solid var(--light-grey);
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.newsletter h2 {
+  margin-bottom: 0.5rem;
+}
+
+.newsletter p {
+  margin-bottom: 1.5rem;
+}
+
+.newsletter form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  text-align: left;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.form-group label {
+  font-size: var(--small-font);
+  font-weight: bold;
+  color: var(--dark-grey);
+}
+
+.form-group input {
+  padding: 0.6rem 0.75rem;
+  border: 1px solid var(--light-grey);
+  border-radius: 4px;
+  font-size: var(--font-base);
+}
+
+.newsletter button {
+  margin-top: 0.5rem;
+}
+
+.newsletter button:hover {
+  transform: scale(1.05);
+}
+
+/* Thank you page styles */
+.thank-you {
+  padding: 2rem;
+  text-align: center;
+}
+
+.home-link {
+  display: inline-block;
+  margin-top: 1rem;
+  padding: 0.75rem 1.5rem;
+  background-color: var(--secondary-color);
+  color: white;
+  text-decoration: none;
+  font-size: var(--large-font);
+  border-radius: 4px;
+  transition: background-color 0.3s ease;
+}
+
+.home-link:hover {
+  transform: scale(1.05);
+}
+
 
 /* Media queries for larger screens */
 @media screen and (min-width: 500px) {
