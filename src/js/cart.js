@@ -10,17 +10,23 @@ function renderCartContents() {
   if (!cartItems || cartItems.length === 0) {
     document.querySelector(".product-list").innerHTML =
       "<p>Your cart is empty.</p>";
+
+    // Hide or clear the total if the cart is empty
+    updateCartTotal([]);
     return;
   }
 
   const htmlItems = cartItems.map((item) => cartItemTemplate(item));
   document.querySelector(".product-list").innerHTML = htmlItems.join("");
+
+  // Calculate and display the total every time the cart is rendered
+  updateCartTotal(cartItems);
 }
 
 function cartItemTemplate(item) {
   const newItem = `
-    <li class="cart-card divider">
-      <!-- Direct child 1: Product image container -->
+    <li class="cart-card">
+      <!-- Product image container -->
       <a href="#" class="cart-card__image">
         <img
           src="${item.Images.PrimarySmall}"
@@ -28,22 +34,22 @@ function cartItemTemplate(item) {
         />
       </a>
 
-      <!-- Direct child 2: Product title as a direct child of the grid -->
+      <!-- Product title -->
       <h2 class="card__name">
         <a href="#">${item.Name}</a>
       </h2>
 
-      <!-- Direct child 3: Product color -->
+      <!-- Product color -->
       <p class="cart-card__color">
         ${item.Colors[0].ColorName}
       </p>
 
-      <!-- Direct child 4: Product quantity -->
+      <!-- Product quantity -->
       <p class="cart-card__quantity">
          qty: ${item.Quantity}
       </p>
 
-      <!-- Direct child 5: Container holding both price and remove button side by side -->
+      <!-- Container holding price and remove button side by side -->
       <div class="cart-card__price-action">
         <span class="cart-card__price">$${item.FinalPrice}</span>
         <span class="cart-card__remove" data-id="${item.Id}" title="Remove item">❌</span>
@@ -52,6 +58,29 @@ function cartItemTemplate(item) {
   `;
 
   return newItem;
+}
+
+// Function to calculate the total cost and display it in the DOM
+function updateCartTotal(cartItems) {
+  const cartFooterEl = document.querySelector(".cart-footer");
+  const totalAmountEl = document.querySelector("#cart-total-amount");
+
+  if (!cartFooterEl || !totalAmountEl) return;
+
+  if (!cartItems || cartItems.length === 0) {
+    cartFooterEl.classList.add("hide"); // Hide the total element if empty
+    return;
+  }
+
+  // Cumulative sum of (Price * Quantity) for each product
+  let total = 0;
+  cartItems.forEach((item) => {
+    total += item.FinalPrice * item.Quantity;
+  });
+
+  // Display the total formatted to 2 decimal places
+  totalAmountEl.innerHTML = total.toFixed(2);
+  cartFooterEl.classList.remove("hide"); // Show the total container
 }
 
 // Initialize event listener to handle item removal when clicking the "X"
