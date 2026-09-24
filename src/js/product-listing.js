@@ -10,8 +10,14 @@ async function initApp() {
   const dataSource = new ProductData("tents");
 
   const element = document.querySelector(".product-list");
+  const quickViewDialog = document.querySelector(".quick-view");
 
-  const productList = new ProductList(category, dataSource, element);
+  const productList = new ProductList(
+    category,
+    dataSource,
+    element,
+    quickViewDialog,
+  );
   productList.init();
 
   initSearchForm(document.querySelector(".search-form"));
