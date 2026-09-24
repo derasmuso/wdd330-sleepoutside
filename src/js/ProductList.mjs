@@ -1,10 +1,13 @@
 import { renderListWithTemplate } from "./utils.mjs";
 
 export default class ProductList {
-  constructor(category, dataSource, listElement) {
+  constructor(category, dataSource, listElement, quickViewDialog) {
     this.category = category;
     this.dataSource = dataSource;
     this.listElement = listElement;
+    this.quickViewDialog = quickViewDialog;
+    this.quickViewOpener = null;
+    this.quickViewProductId = null;
     this.products = []; // Array to store fetched products for filtering or sorting
   }
 
@@ -20,6 +23,7 @@ export default class ProductList {
 
     // 4. Initialize the sorting functionality
     this.initSorting();
+    this.initQuickView();
 
     // 5. Title
     const titleElement = document.querySelector(".title");
@@ -30,7 +34,7 @@ export default class ProductList {
 
   renderList(list) {
     renderListWithTemplate(
-      productCardTemplate,
+      (product) => productCardTemplate(product, Boolean(this.quickViewDialog)),
       this.listElement,
       list,
       "afterbegin",
@@ -63,9 +67,53 @@ export default class ProductList {
       this.renderList(sortedProducts);
     });
   }
+
+  initQuickView() {
+    if (!this.quickViewDialog) return;
+
+    this.listElement.addEventListener("click", async (event) => {
+      const button = event.target.closest(".quick-view-button");
+      if (!button) return;
+
+      this.quickViewOpener = button;
+      await this.showQuickView(button.dataset.productId);
+    });
+
+    this.quickViewDialog
+      .querySelector(".quick-view__close")
+      .addEventListener("click", () => this.quickViewDialog.close());
+
+    this.quickViewDialog.addEventListener("click", (event) => {
+      if (event.target === this.quickViewDialog) this.quickViewDialog.close();
+    });
+
+    this.quickViewDialog.addEventListener("close", () => {
+      this.quickViewOpener?.focus();
+      this.quickViewOpener = null;
+      this.quickViewProductId = null;
+    });
+  }
+
+  async showQuickView(productId) {
+    const content = this.quickViewDialog.querySelector(".quick-view__content");
+    this.quickViewProductId = productId;
+    content.innerHTML = "<p>Loading product details...</p>";
+    if (!this.quickViewDialog.open) this.quickViewDialog.showModal();
+
+    try {
+      const product = await this.dataSource.findProductById(productId);
+      if (this.quickViewProductId !== productId) return;
+      content.innerHTML = quickViewTemplate(product);
+    } catch (error) {
+      if (this.quickViewProductId !== productId) return;
+      console.error("Unable to load product details:", error);
+      content.innerHTML =
+        "<p>Product details could not be loaded. Please try again.</p>";
+    }
+  }
 }
 
-function productCardTemplate(product) {
+function productCardTemplate(product, showQuickViewButton = false) {
   return `
     <li class="product-card">
       <a href="/product_pages/?product=${product.Id}">
@@ -74,6 +122,32 @@ function productCardTemplate(product) {
         <h2 class="card__name">${product.NameWithoutBrand}</h2>
         <p class="product-card__price">$${product.FinalPrice}</p>
       </a>
+      ${
+        showQuickViewButton
+          ? `<button class="quick-view-button" type="button" data-product-id="${product.Id}">
+        Quick View
+      </button>`
+          : ""
+      }
     </li>
     `;
+}
+
+function quickViewTemplate(product) {
+  const color = product.Colors?.[0]?.ColorName || "Not specified";
+  const image = product.Images.PrimaryLarge || product.Images.PrimaryMedium;
+
+  return `
+    <img src="${image}" alt="${product.NameWithoutBrand}">
+    <div class="quick-view__details">
+      <p class="card__brand">${product.Brand.Name}</p>
+      <h2>${product.NameWithoutBrand}</h2>
+      <p class="product-card__price">$${product.FinalPrice}</p>
+      <p><strong>Color:</strong> ${color}</p>
+      <div class="product__description">${product.DescriptionHtmlSimple}</div>
+      <a class="quick-view__details-link" href="/product_pages/?product=${product.Id}">
+        View full product details
+      </a>
+    </div>
+  `;
 }
