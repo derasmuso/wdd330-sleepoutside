@@ -1,40 +1,30 @@
 <!doctype html>
-
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
-    <title>Sleep Outside | Product Make and Name</title>
-
-    <link rel="stylesheet" href="../css/style.css" />
-
+    <title>Sleep Outside | Product</title>
+    <link rel="stylesheet" href="/css/style.css" />
     <script type="module" src="/js/product.js"></script>
-    
   </head>
 
   <body>
     <header class="divider" id="main-header"></header>
-    <nav
-      class="breadcrumb"
-      id="breadcrumb"
-      aria-label="Breadcrumb"
-    ></nav>
+
+    <nav class="breadcrumb" id="breadcrumb" aria-label="Breadcrumb"></nav>
 
     <main class="divider">
       <section class="product-detail">
         <h3></h3>
-
         <h2 class="divider"></h2>
 
-        <img class="divider" id="productImage" src="" alt="" />
+        <picture id="productImagePicture" class="product-detail__image-wrapper">
+          <img class="divider" id="productImage" src="" alt="" />
+        </picture>
 
         <p class="product-card__price">$<span id="productPrice"></span></p>
         <p class="discount-flag" id="discountFlag" hidden></p>
-
         <p class="product__color" id="productColor"></p>
-
         <p class="product__description" id="productDesc"></p>
 
         <div class="product-detail__add">
