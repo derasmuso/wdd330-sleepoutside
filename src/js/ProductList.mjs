@@ -34,7 +34,7 @@ export default class ProductList {
 
   renderList(list) {
     renderListWithTemplate(
-      productCardTemplate,
+      (product) => productCardTemplate(product, Boolean(this.quickViewDialog)),
       this.listElement,
       list,
       "afterbegin",
@@ -113,7 +113,7 @@ export default class ProductList {
   }
 }
 
-function productCardTemplate(product) {
+function productCardTemplate(product, showQuickViewButton = false) {
   return `
     <li class="product-card">
       <a href="/product_pages/?product=${product.Id}">
@@ -122,9 +122,13 @@ function productCardTemplate(product) {
         <h2 class="card__name">${product.NameWithoutBrand}</h2>
         <p class="product-card__price">$${product.FinalPrice}</p>
       </a>
-      <button class="quick-view-button" type="button" data-product-id="${product.Id}">
+      ${
+        showQuickViewButton
+          ? `<button class="quick-view-button" type="button" data-product-id="${product.Id}">
         Quick View
-      </button>
+      </button>`
+          : ""
+      }
     </li>
     `;
 }
