@@ -33,6 +33,9 @@ async function searchProducts(term) {
     console.log("Productos encontrados:", products); // <-- 2. Verifica si la API devuelve datos
 
     productList.renderList(products);
+    productList.renderBreadcrumb(products.length);
+    productList.products = products;
+    productList.initSorting();
     resultMessage.textContent = products.length
       ? `${products.length} result${products.length === 1 ? "" : "s"} for “${term}”.`
       : `No products found for “${term}”.`;

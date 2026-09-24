@@ -1,14 +1,11 @@
 <!doctype html>
-
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
     <title>Sleep Outside | Checkout</title>
-
-    <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="../css/style.css" />
+    <script src="../js/checkout.js" type="module"></script>
   </head>
 
   <body>
@@ -16,42 +13,129 @@
 
     <main class="divider">
       <section class="products">
-        <h2>Review & Place your Order</h2>
+        <h2>Review &amp; Place your Order</h2>
       </section>
-      <form action="">
+
+      <form id="checkoutForm" class="checkout-form" novalidate>
+        <div id="checkoutMessage" class="checkout-message" role="alert" aria-live="polite" hidden></div>
+
         <fieldset>
           <legend>Information</legend>
-          <label for="fname">First Name: </label>
-          <input type="text" id="fname" name="fname" />
-          <label for="lname">Last Name: </label>
-          <input type="text" id="lname" name="lname" />
-          <label for="saddress">Street Address: </label>
-          <input type="text" id="saddress" name="saddress" />
-          <label for="city">City: </label>
-          <input type="text" id="city" name="city" />
-          <label for="state">State: </label>
-          <input type="text" id="state" name="state" />
-          <label for="zip">Zip Code: </label>
-          <input type="number" id="zip" name="zip" />
+
+          <label for="fname">First Name:</label>
+          <input
+            type="text"
+            id="fname"
+            name="fname"
+            autocomplete="given-name"
+            minlength="2"
+            required
+          />
+
+          <label for="lname">Last Name:</label>
+          <input
+            type="text"
+            id="lname"
+            name="lname"
+            autocomplete="family-name"
+            minlength="2"
+            required
+          />
+
+          <label for="saddress">Street Address:</label>
+          <input
+            type="text"
+            id="saddress"
+            name="saddress"
+            autocomplete="street-address"
+            minlength="5"
+            required
+          />
+
+          <label for="city">City:</label>
+          <input
+            type="text"
+            id="city"
+            name="city"
+            autocomplete="address-level2"
+            minlength="2"
+            required
+          />
+
+          <label for="state">State:</label>
+          <input
+            type="text"
+            id="state"
+            name="state"
+            autocomplete="address-level1"
+            minlength="2"
+            required
+          />
+
+          <label for="zip">Zip Code:</label>
+          <input
+            type="text"
+            id="zip"
+            name="zip"
+            inputmode="numeric"
+            pattern="[0-9]{5}"
+            minlength="5"
+            maxlength="5"
+            autocomplete="postal-code"
+            required
+          />
         </fieldset>
+
         <fieldset>
           <legend>Payment</legend>
+
           <label for="ccn">Credit Card Number:</label>
-          <input type="number" id="ccn" name="ccn" />
+          <input
+            type="text"
+            id="ccn"
+            name="ccn"
+            inputmode="numeric"
+            autocomplete="cc-number"
+            pattern="[0-9]{13,19}"
+            minlength="13"
+            maxlength="19"
+            required
+          />
+
           <label for="expiration">Expiration Date:</label>
-          <input type="date" id="expiration" name="expiration" />
+          <input
+            type="month"
+            id="expiration"
+            name="expiration"
+            autocomplete="cc-exp"
+            required
+          />
+
           <label for="security">Security Code:</label>
-          <input type="number" id="security" name="security" />
+          <input
+            type="text"
+            id="security"
+            name="security"
+            inputmode="numeric"
+            autocomplete="cc-csc"
+            pattern="[0-9]{3,4}"
+            minlength="3"
+            maxlength="4"
+            required
+          />
         </fieldset>
+
+        <button type="submit">Place Order</button>
       </form>
-      <section id="ordersumm">
-        <p id="subtotal">Subtotal</p>
-        <p id="tax">Tax</p>
-        <p id="shipping">Shipping Estimate</p>
-        <p id="ordertotal">Order Total</p>
+
+      <section id="ordersumm" aria-label="Order summary">
+        <p id="subtotal">Subtotal: $0.00</p>
+        <p id="tax">Tax: $0.00</p>
+        <p id="shipping">Shipping Estimate: $0.00</p>
+        <p id="ordertotal">Order Total: $0.00</p>
       </section>
     </main>
 
-    <footer id="main-header"></footer>
+    <footer id="main-footer"></footer>
   </body>
 </html>
