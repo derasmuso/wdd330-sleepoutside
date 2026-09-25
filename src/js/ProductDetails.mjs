@@ -1,3 +1,4 @@
+// src/js/ProductDetails.mjs
 import { setLocalStorage, getLocalStorage, animateCartIcon } from "./utils.mjs";
 
 export default class ProductDetails {
@@ -15,9 +16,13 @@ export default class ProductDetails {
         return;
       }
       this.renderProductDetails();
+
       document
         .getElementById("addToCart")
         ?.addEventListener("click", this.addProductToCart.bind(this));
+
+      // ✅ Set up color swatch handlers AFTER rendering
+      this.setupColorSwatches();
     } catch (error) {
       console.error("Error initializing product:", error);
       this.renderError();
@@ -39,6 +44,28 @@ export default class ProductDetails {
     price = typeof price === "number" ? price : parseFloat(price) || 0;
 
     const color = this.product.Colors?.[0]?.ColorName || "";
+
+    // Build color swatches HTML
+    let colorSwatchesHtml = "";
+    if (this.product.Colors && this.product.Colors.length > 0) {
+      colorSwatchesHtml = `
+        <div class="color-swatches">
+          ${this.product.Colors.map(
+            (color, index) => `
+              <button
+                class="color-swatch ${index === 0 ? "active" : ""}"
+                data-color-code="${color.ColorCode}"
+                data-color-name="${color.ColorName}"
+                data-image="${color.ColorPreviewImageSrc || ""}"
+                title="${color.ColorName}"
+                style="background-image: url('${color.ColorChipImageSrc || ""}')"
+              ></button>
+            `
+          ).join("")}
+        </div>
+      `;
+    }
+
     const description =
       this.product.DescriptionHtmlSimple ||
       this.product.Description ||
@@ -49,11 +76,7 @@ export default class ProductDetails {
     let discountHtml = "";
     const retail = Number(this.product.SuggestedRetailPrice);
     const final = Number(this.product.FinalPrice);
-    if (
-      Number.isFinite(retail) &&
-      Number.isFinite(final) &&
-      retail > final
-    ) {
+    if (Number.isFinite(retail) && Number.isFinite(final) && retail > final) {
       const savings = retail - final;
       const percent = Math.round((savings / retail) * 100);
       discountHtml = `<span class="discount-flag">${percent}% OFF — Save $${savings.toFixed(2)}</span>`;
@@ -63,16 +86,40 @@ export default class ProductDetails {
       <section class="product-detail">
         <h3>${brand}</h3>
         <h2 class="divider">${name}</h2>
-        <img class="divider" src="${image}" alt="${name}" loading="lazy" onerror="this.src='/images/placeholder.jpg'">
+        <img class="divider" id="productImage" src="${image}" alt="${name}" loading="lazy" onerror="this.src='/images/placeholder.jpg'">
         ${discountHtml}
         <p class="product-card__price">$${price.toFixed(2)}</p>
-        <p class="product__color">${color}</p>
+        <p class="product__color" id="currentColor">${color}</p>
+        ${colorSwatchesHtml}
         <p class="product__description">${description}</p>
         <div class="product-detail__add">
           <button id="addToCart" data-id="${id}">Add to Cart</button>
         </div>
       </section>
     `;
+  }
+
+  setupColorSwatches() {
+    document.querySelectorAll(".color-swatch").forEach((swatch) => {
+      swatch.addEventListener("click", () => {
+        // Update active state
+        document.querySelectorAll(".color-swatch").forEach((s) => s.classList.remove("active"));
+        swatch.classList.add("active");
+
+        // Update color name
+        const colorNameEl = document.getElementById("currentColor");
+        if (colorNameEl) {
+          colorNameEl.textContent = swatch.dataset.colorName;
+        }
+
+        // Update product image
+        const newImage = swatch.dataset.image;
+        const imageEl = document.getElementById("productImage");
+        if (newImage && imageEl) {
+          imageEl.src = newImage;
+        }
+      });
+    });
   }
 
   addProductToCart() {
@@ -88,10 +135,10 @@ export default class ProductDetails {
 
     setLocalStorage("so-cart", cartItems);
 
-    // ✅ Trigger the animation
+    // Trigger the cart animation
     animateCartIcon();
 
-    // Existing button feedback
+    // Button feedback
     const btn = document.getElementById("addToCart");
     if (btn) {
       btn.disabled = true;

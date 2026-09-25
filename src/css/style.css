@@ -477,6 +477,40 @@ footer {
   font-size: 1.1rem;
 }
 
+/* Color swatches */
+.color-swatches {
+  display: flex;
+  gap: 10px;
+  margin: 15px 0;
+  flex-wrap: wrap;
+}
+
+.color-swatch {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 2px solid #ddd;
+  background-size: cover;
+  background-position: center;
+  cursor: pointer;
+  transition:
+    transform 0.2s,
+    border-color 0.2s,
+    box-shadow 0.2s;
+  padding: 0;
+}
+
+.color-swatch:hover {
+  transform: scale(1.1);
+  border-color: #2c7a4d;
+}
+
+.color-swatch.active {
+  border-color: #2c7a4d;
+  border-width: 3px;
+  box-shadow: 0 0 0 3px rgba(44, 122, 77, 0.2);
+}
+
 /* Cart icon animation */
 @keyframes cartBounce {
   0% {
