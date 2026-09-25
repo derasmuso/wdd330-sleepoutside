@@ -1,5 +1,4 @@
-// src/js/ProductDetails.mjs
-import { setLocalStorage, getLocalStorage } from "./utils.mjs";
+import { setLocalStorage, getLocalStorage, animateCartIcon } from "./utils.mjs";
 
 export default class ProductDetails {
   constructor(productId, dataSource) {
@@ -89,6 +88,10 @@ export default class ProductDetails {
 
     setLocalStorage("so-cart", cartItems);
 
+    // ✅ Trigger the animation
+    animateCartIcon();
+
+    // Existing button feedback
     const btn = document.getElementById("addToCart");
     if (btn) {
       btn.disabled = true;

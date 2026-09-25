@@ -91,3 +91,19 @@ export function alertMessage(message, scroll = true) {
     if (scroll) window.scrollTo(0, 0);
   }
 }
+
+// Trigger cart icon bounce animation
+export function animateCartIcon() {
+  const cartIcon = document.querySelector(".cart svg");
+  if (!cartIcon) return;
+
+  cartIcon.classList.remove("cart-icon-bounce");
+  // Force reflow so the animation can restart
+  void cartIcon.offsetWidth;
+  cartIcon.classList.add("cart-icon-bounce");
+
+  // Remove class after animation ends
+  setTimeout(() => {
+    cartIcon.classList.remove("cart-icon-bounce");
+  }, 700);
+}
