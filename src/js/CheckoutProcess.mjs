@@ -112,6 +112,23 @@ export default class CheckoutProcess {
       tax: this.tax,
     };
 
-    return this.externalServices.checkout(order);
+    try {
+      return await this.externalServices.checkout(order);
+    } catch (err) {
+      console.error("Checkout error:", err);
+
+      const message = document.querySelector("#checkoutMessage");
+
+      if (message) {
+        const errorMessage =
+          typeof err.message === "object"
+            ? JSON.stringify(err.message)
+            : err.message;
+
+        message.hidden = false;
+        message.textContent =
+          errorMessage || "There was an error processing your order.";
+      }
+    }
   }
 }

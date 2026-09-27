@@ -43,6 +43,20 @@ async function fetchJson(url) {
   return response.json();
 }
 
+/**
+ * Convert the response body to JSON and preserve the detailed
+ * error response sent by the server.
+ */
+async function convertToJson(res) {
+  const jsonResponse = await res.json();
+
+  if (res.ok) {
+    return jsonResponse;
+  } else {
+    throw { name: "servicesError", message: jsonResponse };
+  }
+}
+
 export default class ExternalServices {
   constructor(category = "tents") {
     this.category = category;
@@ -141,6 +155,6 @@ export default class ExternalServices {
       },
     );
 
-    return response.json();
+    return convertToJson(response);
   }
 }
