@@ -1,4 +1,5 @@
 import { getLocalStorage } from "./utils.mjs";
+import ExternalServices from "./ExternalServices.mjs";
 
 export default class CheckoutProcess {
   constructor(key, outputSelector) {
@@ -9,6 +10,7 @@ export default class CheckoutProcess {
     this.shipping = 0;
     this.tax = 0;
     this.orderTotal = 0;
+    this.externalServices = new ExternalServices();
   }
 
   init() {
@@ -54,7 +56,9 @@ export default class CheckoutProcess {
       `${this.outputSelector} #subtotal`,
     );
 
-    const tax = document.querySelector(`${this.outputSelector} #tax`);
+    const tax = document.querySelector(
+      `${this.outputSelector} #tax`,
+    );
 
     const shipping = document.querySelector(
       `${this.outputSelector} #shipping`,
@@ -79,5 +83,35 @@ export default class CheckoutProcess {
     if (orderTotal) {
       orderTotal.innerText = `Order Total: $${this.orderTotal.toFixed(2)}`;
     }
+  }
+
+  packageItems(items) {
+    return items.map((item) => ({
+      id: item.Id,
+      quantity: item.Quantity,
+    }));
+  }
+
+  async checkout(form) {
+    const formData = new FormData(form);
+
+    const order = {
+      orderDate: new Date(),
+      fname: formData.get("fname"),
+      lname: formData.get("lname"),
+      street: formData.get("saddress"),
+      city: formData.get("city"),
+      state: formData.get("state"),
+      zip: formData.get("zip"),
+      cardNumber: formData.get("ccn"),
+      expiration: formData.get("expiration"),
+      code: formData.get("security"),
+      items: this.packageItems(this.list),
+      orderTotal: this.orderTotal,
+      shipping: this.shipping,
+      tax: this.tax,
+    };
+
+    return this.externalServices.checkout(order);
   }
 }
