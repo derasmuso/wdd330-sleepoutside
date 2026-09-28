@@ -1,4 +1,9 @@
-import { getLocalStorage, setLocalStorage } from "./utils.mjs";
+import {
+  animateCartIcon,
+  getLocalStorage,
+  setLocalStorage,
+  updateCartCount,
+} from "./utils.mjs";
 
 export default class ProductDetails {
   constructor(productId, dataSource) {
@@ -37,6 +42,8 @@ export default class ProductDetails {
 
     // Save the updated cart array back to localStorage.
     setLocalStorage("so-cart", cartItems);
+    updateCartCount();
+    animateCartIcon();
 
     // Disable the Add to Cart button after the product
     // has been successfully added.

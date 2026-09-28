@@ -160,6 +160,35 @@ button {
   width: 25px;
 }
 
+.cart--updated svg {
+  animation: cart-added 550ms ease-out;
+  transform-origin: center;
+}
+
+@keyframes cart-added {
+  0% {
+    transform: scale(1);
+  }
+
+  40% {
+    transform: translateY(-0.35rem) scale(1.28);
+  }
+
+  70% {
+    transform: translateY(0) scale(0.95);
+  }
+
+  100% {
+    transform: scale(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cart--updated svg {
+    animation-duration: 1ms;
+  }
+}
+
 .cart:hover svg {
   fill: gray;
 }

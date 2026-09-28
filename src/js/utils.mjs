@@ -100,6 +100,20 @@ export function updateCartCount() {
   }
 }
 
+export function animateCartIcon() {
+  const cart = document.querySelector(".cart");
+
+  if (!cart) return;
+
+  const resetAnimation = () => cart.classList.remove("cart--updated");
+
+  cart.classList.remove("cart--updated");
+  requestAnimationFrame(() => {
+    cart.classList.add("cart--updated");
+    cart.addEventListener("animationend", resetAnimation, { once: true });
+  });
+}
+
 export async function loadHeaderFooter() {
   const headerTemplate = await loadTemplate("../partials/header.html");
 
