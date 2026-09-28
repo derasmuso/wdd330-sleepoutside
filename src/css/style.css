@@ -160,31 +160,39 @@ button {
   width: 25px;
 }
 
-.cart--updated svg {
-  animation: cart-added 550ms ease-out;
+.cart svg.cart--updated {
+  animation: cart-added 800ms ease-out;
   transform-origin: center;
 }
 
 @keyframes cart-added {
   0% {
-    transform: scale(1);
+    transform: translateY(0) scale(1) rotate(0);
   }
 
-  40% {
-    transform: translateY(-0.35rem) scale(1.28);
+  18% {
+    transform: translateY(-0.65rem) scale(1.45) rotate(-7deg);
   }
 
-  70% {
-    transform: translateY(0) scale(0.95);
+  38% {
+    transform: translateY(0) scale(0.88) rotate(5deg);
+  }
+
+  56% {
+    transform: translateY(-0.3rem) scale(1.18) rotate(-3deg);
+  }
+
+  74% {
+    transform: translateY(0) scale(0.98) rotate(1deg);
   }
 
   100% {
-    transform: scale(1);
+    transform: translateY(0) scale(1) rotate(0);
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .cart--updated svg {
+  .cart svg.cart--updated {
     animation-duration: 1ms;
   }
 }

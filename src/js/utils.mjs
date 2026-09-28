@@ -101,16 +101,16 @@ export function updateCartCount() {
 }
 
 export function animateCartIcon() {
-  const cart = document.querySelector(".cart");
+  const cartIcon = document.querySelector(".cart svg");
 
-  if (!cart) return;
+  if (!cartIcon) return;
 
-  const resetAnimation = () => cart.classList.remove("cart--updated");
+  const resetAnimation = () => cartIcon.classList.remove("cart--updated");
 
-  cart.classList.remove("cart--updated");
+  cartIcon.classList.remove("cart--updated");
+  cartIcon.addEventListener("animationend", resetAnimation, { once: true });
   requestAnimationFrame(() => {
-    cart.classList.add("cart--updated");
-    cart.addEventListener("animationend", resetAnimation, { once: true });
+    cartIcon.classList.add("cart--updated");
   });
 }
 
