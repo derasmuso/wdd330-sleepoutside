@@ -1109,3 +1109,27 @@ footer {
     font-size: 1.1rem;
   }
 }
+.alert {
+  background-color: #f8d7da;
+  border: 1px solid #f5c2c7;
+  color: #842029;
+  padding: 1rem;
+  margin: 1rem 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+}
+
+.alert p {
+  margin: 0;
+}
+
+.alert button {
+  border: none;
+  background: transparent;
+  color: inherit;
+  font-size: 1.2rem;
+  font-weight: bold;
+  cursor: pointer;
+}

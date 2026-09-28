@@ -1,4 +1,4 @@
-import { getLocalStorage } from "./utils.mjs";
+import { getLocalStorage, alertMessage } from "./utils.mjs";
 import ExternalServices from "./ExternalServices.mjs";
 
 export default class CheckoutProcess {
@@ -113,22 +113,22 @@ export default class CheckoutProcess {
     };
 
     try {
-      return await this.externalServices.checkout(order);
+      await this.externalServices.checkout(order);
+
+      localStorage.removeItem(this.key);
+
+      window.location.href = "./success.html";
     } catch (err) {
       console.error("Checkout error:", err);
 
-      const message = document.querySelector("#checkoutMessage");
+      const errorMessage =
+        typeof err.message === "object"
+          ? JSON.stringify(err.message)
+          : err.message;
 
-      if (message) {
-        const errorMessage =
-          typeof err.message === "object"
-            ? JSON.stringify(err.message)
-            : err.message;
-
-        message.hidden = false;
-        message.textContent =
-          errorMessage || "There was an error processing your order.";
-      }
+      alertMessage(
+        errorMessage || "There was an error processing your order.",
+      );
     }
   }
 }
