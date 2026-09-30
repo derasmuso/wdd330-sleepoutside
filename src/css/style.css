@@ -1133,3 +1133,48 @@ footer {
   font-weight: bold;
   cursor: pointer;
 }
+.wishlist-card {
+  border: 1px solid #ddd;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  background-color: #fff;
+}
+
+.wishlist-card img {
+  width: 100%;
+  max-width: 250px;
+  height: auto;
+  display: block;
+  margin-bottom: 1rem;
+}
+
+.wishlist-card h2 {
+  margin-bottom: 0.5rem;
+}
+
+.wishlist-card__actions {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.wishlist-card__actions button {
+  padding: 0.6rem 1rem;
+  cursor: pointer;
+}
+.wishlist-link {
+  display: flex;
+  align-items: center;
+  margin-left: 1rem;
+}
+
+.wishlist-link a {
+  text-decoration: none;
+  font-weight: bold;
+  color: inherit;
+  white-space: nowrap;
+}
+
+.wishlist-link a:hover {
+  text-decoration: underline;
+}

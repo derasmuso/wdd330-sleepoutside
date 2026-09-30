@@ -26,6 +26,7 @@ export default class ProductDetails {
 
       const addToCartButton = document.getElementById("addToCart");
       const colorContainer = document.getElementById("productColors");
+      const wishlistButton = document.getElementById("addToWishlist");
 
       if (colorContainer) {
         colorContainer.addEventListener("change", (event) => {
@@ -41,6 +42,13 @@ export default class ProductDetails {
         this.selectedColor = this.product?.Colors?.[0] || null;
       }
 
+      if (wishlistButton) {
+        wishlistButton.addEventListener(
+          "click",
+          this.addToWishlist.bind(this),
+        );
+      }
+
       if (addToCartButton) {
         addToCartButton.addEventListener(
           "click",
@@ -50,6 +58,24 @@ export default class ProductDetails {
     } catch (error) {
       console.error("Unable to load product:", error);
     }
+  }
+
+  addToWishlist() {
+    const wishlist = getLocalStorage("so-wishlist") || [];
+
+    const alreadyInWishlist = wishlist.some(
+      (item) => item?.Id === this.product?.Id,
+    );
+
+    if (alreadyInWishlist) {
+      alertMessage("Product is already in your wishlist!", false);
+      return;
+    }
+
+    wishlist.push(this.product);
+    setLocalStorage("so-wishlist", wishlist);
+
+    alertMessage("Product added to wishlist!", false);
   }
 
   addProductToCart() {
@@ -72,7 +98,8 @@ export default class ProductDetails {
     );
 
     if (itemAlreadyInCart) {
-      itemAlreadyInCart.Quantity = (itemAlreadyInCart.Quantity || 1) + 1;
+      itemAlreadyInCart.Quantity =
+        (itemAlreadyInCart.Quantity || 1) + 1;
     } else {
       const cartProduct = {
         ...this.product,
@@ -88,6 +115,7 @@ export default class ProductDetails {
     alertMessage("Product added to cart!", false);
 
     const addToCartButton = document.getElementById("addToCart");
+
     if (addToCartButton) {
       addToCartButton.disabled = true;
       addToCartButton.textContent = "Successfully Added to Cart";
@@ -101,9 +129,13 @@ export default class ProductDetails {
 
 function productDetailsTemplate(product, category) {
   const brandElement = document.querySelector("h2");
-  if (brandElement) brandElement.textContent = product?.Brand?.Name || "";
+
+  if (brandElement) {
+    brandElement.textContent = product?.Brand?.Name || "";
+  }
 
   const nameElement = document.querySelector("h3");
+
   if (nameElement) {
     nameElement.textContent =
       product?.NameWithoutBrand || product?.Name || "";
@@ -114,14 +146,24 @@ function productDetailsTemplate(product, category) {
 
   if (productImage) {
     productImage.src = images.PrimaryLarge || product?.Image || "";
+
     productImage.alt =
-      product?.NameWithoutBrand || product?.Name || "Product";
+      product?.NameWithoutBrand ||
+      product?.Name ||
+      "Product";
   }
 
   const picture = document.getElementById("productImagePicture");
+
   if (picture) {
-    const small = images.PrimarySmall || product?.Image;
-    const medium = images.PrimaryMedium || product?.Image;
+    const small =
+      images.PrimarySmall ||
+      product?.Image;
+
+    const medium =
+      images.PrimaryMedium ||
+      product?.Image;
+
     const large =
       images.PrimaryLarge ||
       images.PrimaryExtraLarge ||
@@ -133,35 +175,49 @@ function productDetailsTemplate(product, category) {
           ? `<source media="(max-width: 499px)" srcset="${escapeHtml(small)}" />`
           : ""
       }
+
       ${
         medium
           ? `<source media="(min-width: 500px) and (max-width: 899px)" srcset="${escapeHtml(medium)}" />`
           : ""
       }
+
       ${
         large
           ? `<source media="(min-width: 900px)" srcset="${escapeHtml(large)}" />`
           : ""
       }
-      <img id="productImage" src="${escapeHtml(
-        large || "",
-      )}" alt="${escapeHtml(
-        product?.NameWithoutBrand || product?.Name || "Product",
-      )}" />
+
+      <img
+        id="productImage"
+        src="${escapeHtml(large || "")}"
+        alt="${escapeHtml(
+          product?.NameWithoutBrand ||
+            product?.Name ||
+            "Product",
+        )}"
+      />
     `;
   }
 
-  const priceElement = document.getElementById("productPrice");
-  const finalPrice = Number(product?.FinalPrice);
+  const priceElement =
+    document.getElementById("productPrice");
+
+  const finalPrice =
+    Number(product?.FinalPrice);
 
   if (priceElement) {
-    priceElement.textContent = Number.isFinite(finalPrice)
-      ? finalPrice.toFixed(2)
-      : "0.00";
+    priceElement.textContent =
+      Number.isFinite(finalPrice)
+        ? finalPrice.toFixed(2)
+        : "0.00";
   }
 
-  const discountFlag = document.getElementById("discountFlag");
-  const retailPrice = Number(product?.SuggestedRetailPrice);
+  const discountFlag =
+    document.getElementById("discountFlag");
+
+  const retailPrice =
+    Number(product?.SuggestedRetailPrice);
 
   if (
     discountFlag &&
@@ -169,40 +225,50 @@ function productDetailsTemplate(product, category) {
     Number.isFinite(finalPrice) &&
     retailPrice > finalPrice
   ) {
-    const savings = retailPrice - finalPrice;
-    const percentage = Math.round((savings / retailPrice) * 100);
+    const savings =
+      retailPrice - finalPrice;
 
-    discountFlag.textContent = `${percentage}% OFF — Save $${savings.toFixed(
-      2,
-    )}`;
+    const percentage =
+      Math.round(
+        (savings / retailPrice) * 100,
+      );
+
+    discountFlag.textContent =
+      `${percentage}% OFF — Save $${savings.toFixed(2)}`;
 
     discountFlag.hidden = false;
   } else if (discountFlag) {
     discountFlag.hidden = true;
   }
 
-  const colorElement = document.getElementById("productColor");
+  const colorElement =
+    document.getElementById("productColor");
+
   const colors = Array.isArray(product?.Colors)
     ? product.Colors
     : [];
 
   if (colorElement) {
-    colorElement.textContent = colors[0]?.ColorName || "";
+    colorElement.textContent =
+      colors[0]?.ColorName || "";
   }
 
   renderColorOptions(product);
 
-  const descriptionElement = document.getElementById("productDesc");
+  const descriptionElement =
+    document.getElementById("productDesc");
 
   if (descriptionElement) {
     descriptionElement.innerHTML =
       product?.DescriptionHtmlSimple || "";
   }
 
-  const breadcrumb = document.querySelector("#breadcrumb");
+  const breadcrumb =
+    document.querySelector("#breadcrumb");
 
   if (breadcrumb) {
-    const categoryName = formatCategoryName(category);
+    const categoryName =
+      formatCategoryName(category);
 
     breadcrumb.innerHTML = `
       <a href="/product_listing/index.html?category=${encodeURIComponent(
@@ -212,18 +278,24 @@ function productDetailsTemplate(product, category) {
       </a>
     `;
 
-    breadcrumb.setAttribute("aria-label", categoryName);
+    breadcrumb.setAttribute(
+      "aria-label",
+      categoryName,
+    );
   }
 
-  const addToCartButton = document.getElementById("addToCart");
+  const addToCartButton =
+    document.getElementById("addToCart");
 
   if (addToCartButton) {
-    addToCartButton.dataset.id = product?.Id || "";
+    addToCartButton.dataset.id =
+      product?.Id || "";
   }
 }
 
 function renderColorOptions(product) {
-  const container = document.getElementById("productColors");
+  const container =
+    document.getElementById("productColors");
 
   if (!container) return;
 
@@ -238,24 +310,35 @@ function renderColorOptions(product) {
 
   container.innerHTML = `
     <fieldset class="product-colors">
-      <legend class="product-colors__title">Choose a color</legend>
+      <legend class="product-colors__title">
+        Choose a color
+      </legend>
 
       <div class="color-options">
         ${colors
           .map((color, index) => {
             const code = escapeHtml(
-              color?.ColorCode || String(index),
+              color?.ColorCode ||
+                String(index),
             );
 
             const name = escapeHtml(
-              color?.ColorName || "Color",
+              color?.ColorName ||
+                "Color",
             );
 
-            const swatch = color?.ColorChipImageSrc
-              ? `<img src="${escapeHtml(
-                  color.ColorChipImageSrc,
-                )}" alt="${name} color swatch" />`
-              : `<span class="color-swatch-fallback" aria-hidden="true"></span>`;
+            const swatch =
+              color?.ColorChipImageSrc
+                ? `<img
+                    src="${escapeHtml(
+                      color.ColorChipImageSrc,
+                    )}"
+                    alt="${name} color swatch"
+                  />`
+                : `<span
+                    class="color-swatch-fallback"
+                    aria-hidden="true">
+                  </span>`;
 
             return `
               <div class="color-option">
@@ -269,7 +352,10 @@ function renderColorOptions(product) {
 
                 <label for="color-${code}">
                   ${swatch}
-                  <span class="color-option__name">${name}</span>
+
+                  <span class="color-option__name">
+                    ${name}
+                  </span>
                 </label>
               </div>
             `;
@@ -280,52 +366,73 @@ function renderColorOptions(product) {
       <p class="selected-color">
         Selected:
         <strong id="selectedColorName">
-          ${escapeHtml(colors[0]?.ColorName || "")}
+          ${escapeHtml(
+            colors[0]?.ColorName || "",
+          )}
         </strong>
       </p>
     </fieldset>
   `;
 
-  const firstColor = colors[0] || null;
-  let selectedColor = firstColor;
+  const firstColor =
+    colors[0] || null;
+
+  let selectedColor =
+    firstColor;
 
   const selectedColorName =
-    document.getElementById("selectedColorName");
+    document.getElementById(
+      "selectedColorName",
+    );
 
   container
-    .querySelectorAll('input[name="productColor"]')
+    .querySelectorAll(
+      'input[name="productColor"]',
+    )
     .forEach((input) => {
-      input.addEventListener("change", () => {
-        selectedColor =
-          colors.find(
-            (color) =>
-              String(color?.ColorCode) === input.value,
-          ) || firstColor;
+      input.addEventListener(
+        "change",
+        () => {
+          selectedColor =
+            colors.find(
+              (color) =>
+                String(
+                  color?.ColorCode,
+                ) === input.value,
+            ) || firstColor;
 
-        if (selectedColorName) {
-          selectedColorName.textContent =
-            selectedColor?.ColorName || "";
-        }
-      });
+          if (selectedColorName) {
+            selectedColorName.textContent =
+              selectedColor?.ColorName ||
+              "";
+          }
+        },
+      );
     });
 
   container.dataset.selectedColor =
     firstColor?.ColorCode || "";
 
-  container.addEventListener("change", (event) => {
-    if (
-      event.target.matches(
-        'input[name="productColor"]',
-      )
-    ) {
-      container.dataset.selectedColor =
-        event.target.value;
-    }
-  });
+  container.addEventListener(
+    "change",
+    (event) => {
+      if (
+        event.target.matches(
+          'input[name="productColor"]',
+        )
+      ) {
+        container.dataset.selectedColor =
+          event.target.value;
+      }
+    },
+  );
 }
 
 function formatCategoryName(category) {
-  if (!category || category === "products") {
+  if (
+    !category ||
+    category === "products"
+  ) {
     return "Products";
   }
 
@@ -333,7 +440,8 @@ function formatCategoryName(category) {
     .split("-")
     .map(
       (word) =>
-        word.charAt(0).toUpperCase() + word.slice(1),
+        word.charAt(0).toUpperCase() +
+        word.slice(1),
     )
     .join(" ");
 }
