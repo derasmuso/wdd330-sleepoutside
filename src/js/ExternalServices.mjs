@@ -24,21 +24,40 @@ async function fetchJson(url) {
   // the confusing "Unexpected token '<'" error.
   if (!contentType.includes("application/json")) {
     const text = await response.text();
+
     if (/^\s*<!doctype html/i.test(text) || /^\s*<html/i.test(text)) {
-      throw new Error(`Expected JSON from ${url}, but the server returned HTML.`);
+      throw new Error(
+        `Expected JSON from ${url}, but the server returned HTML.`,
+      );
     }
 
     try {
       return JSON.parse(text);
     } catch {
-      throw new Error(`Expected JSON from ${url}, but received an invalid response.`);
+      throw new Error(
+        `Expected JSON from ${url}, but received an invalid response.`,
+      );
     }
   }
 
   return response.json();
 }
 
-export default class ProductData {
+/**
+ * Convert the response body to JSON and preserve the detailed
+ * error response sent by the server.
+ */
+async function convertToJson(res) {
+  const jsonResponse = await res.json();
+
+  if (res.ok) {
+    return jsonResponse;
+  } else {
+    throw { name: "servicesError", message: jsonResponse };
+  }
+}
+
+export default class ExternalServices {
   constructor(category = "tents") {
     this.category = category;
   }
@@ -54,19 +73,31 @@ export default class ProductData {
 
   async findProductById(id) {
     const productId = String(id || "").trim();
+
     if (!productId) return null;
 
     // Product detail pages pass their category in the URL. Search that file
     // first, then fall back to the other local product datasets.
-    const categories = [this.category, "tents", "backpacks", "sleeping-bags"]
+    const categories = [
+      this.category,
+      "tents",
+      "backpacks",
+      "sleeping-bags",
+    ]
       .map((category) => String(category || "").toLowerCase())
-      .filter((category, index, array) => category && array.indexOf(category) === index);
+      .filter(
+        (category, index, array) =>
+          category && array.indexOf(category) === index,
+      );
 
     for (const category of categories) {
       try {
         const products = await this.getData(category);
+
         const found = products.find(
-          (product) => String(product?.Id || "").toLowerCase() === productId.toLowerCase(),
+          (product) =>
+            String(product?.Id || "").toLowerCase() ===
+            productId.toLowerCase(),
         );
 
         if (found) return found;
@@ -80,6 +111,7 @@ export default class ProductData {
 
   async search(searchTerm) {
     const normalizedTerm = String(searchTerm || "").trim().toLowerCase();
+
     if (!normalizedTerm) return [];
 
     const categories = ["tents", "backpacks", "sleeping-bags"];
@@ -88,6 +120,7 @@ export default class ProductData {
     for (const category of categories) {
       try {
         const products = await this.getData(category);
+
         results.push(
           ...products.filter((product) => {
             const searchableProduct = [
@@ -108,5 +141,20 @@ export default class ProductData {
     }
 
     return results;
+  }
+
+  async checkout(order) {
+    const response = await fetch(
+      "https://wdd330-backend-osp8.onrender.com/checkout",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(order),
+      },
+    );
+
+    return convertToJson(response);
   }
 }

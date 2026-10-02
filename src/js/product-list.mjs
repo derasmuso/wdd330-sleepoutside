@@ -1,4 +1,4 @@
-import ProductData from "./ProductData.mjs";
+import ExternalServices from "./ExternalServices.mjs";
 import ProductList from "./ProductList.mjs";
 import { loadHeaderFooter } from "./utils.mjs";
 
@@ -9,7 +9,7 @@ const categoryName = category
   .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
   .join(" ");
 
-const dataSource = new ProductData(category);
+const dataSource = new ExternalServices(category);
 const productListElement = document.querySelector(".product-list");
 
 async function initProductList() {

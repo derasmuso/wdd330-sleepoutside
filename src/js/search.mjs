@@ -1,4 +1,4 @@
-import ProductData from "./ProductData.mjs";
+import ExternalServices from "./ExternalServices.mjs";
 import ProductList from "./ProductList.mjs";
 import { getParam } from "./utils.mjs";
 import { initSearchForm } from "./search-form.mjs";
@@ -21,7 +21,7 @@ if (!searchTerm) {
 async function searchProducts(term) {
   console.log("Término recibido para buscar:", term); // <-- 1. Verifica si esto sale en la consola
 
-  const dataSource = new ProductData("tents");
+  const dataSource = new ExternalServices("tents");
   const productList = new ProductList(
     "Search results",
     dataSource,

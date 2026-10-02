@@ -117,3 +117,29 @@ export async function loadHeaderFooter() {
 
   updateCartCount();
 }
+export function alertMessage(message, scroll = true) {
+  const alert = document.createElement("div");
+
+  alert.classList.add("alert");
+
+  alert.innerHTML = `
+    <p>${message}</p>
+    <button type="button" aria-label="Close message">X</button>
+  `;
+
+  alert.addEventListener("click", function (event) {
+    if (event.target.tagName === "BUTTON") {
+      this.remove();
+    }
+  });
+
+  const main = document.querySelector("main");
+
+  if (main) {
+    main.prepend(alert);
+  }
+
+  if (scroll) {
+    window.scrollTo(0, 0);
+  }
+}
