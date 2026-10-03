@@ -15,6 +15,7 @@ export default defineConfig({
         search: resolve(__dirname, "src/search/index.html"),
         product_listing: resolve(__dirname, "src/product_listing/index.html"),
         newsletterThankYou: resolve(__dirname, "src/thank-you/newsletter.html"),
+        wishlist: resolve(__dirname, "src/wishlist/index.html"),
       },
     },
   },
