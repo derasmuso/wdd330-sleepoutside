@@ -53,6 +53,8 @@ async function convertToJson(res) {
   if (res.ok) {
     return jsonResponse;
   } else {
+    // Changes were already put into main so I will do changes in comment form.
+    // throw  {name: "servicesError", message: jsonResponse };
     throw { name: "servicesError", message: jsonResponse };
   }
 }
@@ -78,12 +80,7 @@ export default class ExternalServices {
 
     // Product detail pages pass their category in the URL. Search that file
     // first, then fall back to the other local product datasets.
-    const categories = [
-      this.category,
-      "tents",
-      "backpacks",
-      "sleeping-bags",
-    ]
+    const categories = [this.category, "tents", "backpacks", "sleeping-bags"]
       .map((category) => String(category || "").toLowerCase())
       .filter(
         (category, index, array) =>
@@ -96,8 +93,7 @@ export default class ExternalServices {
 
         const found = products.find(
           (product) =>
-            String(product?.Id || "").toLowerCase() ===
-            productId.toLowerCase(),
+            String(product?.Id || "").toLowerCase() === productId.toLowerCase(),
         );
 
         if (found) return found;
@@ -110,7 +106,9 @@ export default class ExternalServices {
   }
 
   async search(searchTerm) {
-    const normalizedTerm = String(searchTerm || "").trim().toLowerCase();
+    const normalizedTerm = String(searchTerm || "")
+      .trim()
+      .toLowerCase();
 
     if (!normalizedTerm) return [];
 

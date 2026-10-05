@@ -52,17 +52,11 @@ export default class CheckoutProcess {
   }
 
   displayOrderTotals() {
-    const subtotal = document.querySelector(
-      `${this.outputSelector} #subtotal`,
-    );
+    const subtotal = document.querySelector(`${this.outputSelector} #subtotal`);
 
-    const tax = document.querySelector(
-      `${this.outputSelector} #tax`,
-    );
+    const tax = document.querySelector(`${this.outputSelector} #tax`);
 
-    const shipping = document.querySelector(
-      `${this.outputSelector} #shipping`,
-    );
+    const shipping = document.querySelector(`${this.outputSelector} #shipping`);
 
     const orderTotal = document.querySelector(
       `${this.outputSelector} #ordertotal`,
@@ -112,6 +106,16 @@ export default class CheckoutProcess {
       tax: this.tax,
     };
 
+    /*
+    placing my work in comment form
+    try {
+      await this.externalServices.checkout(order);
+      localStorage.removeItem(this.key);
+      window.location.href = "../checkout/success.html"
+    } catch (err) {
+      console.error("Error", err)
+    }
+    */
     try {
       await this.externalServices.checkout(order);
 
@@ -126,9 +130,7 @@ export default class CheckoutProcess {
           ? JSON.stringify(err.message)
           : err.message;
 
-      alertMessage(
-        errorMessage || "There was an error processing your order.",
-      );
+      alertMessage(errorMessage || "There was an error processing your order.");
     }
   }
 }

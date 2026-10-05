@@ -12,8 +12,10 @@ async function init() {
 
   if (form) {
     form.addEventListener("submit", async (event) => {
+      // personal work in comments
+      // event.preventDefault();
+      //checkoutProcess.checkout(form)
       event.preventDefault();
-
       await checkoutProcess.checkout(form);
     });
   }
